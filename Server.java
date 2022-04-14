@@ -696,6 +696,249 @@ public class Server {
         return usernamesList;
     }
 
+    //Returns true if file is in correct format
+    //Returns false if file is in incorrect format
+    public static boolean checkFileValidity(String filename) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            File file = new File(filename);
+            file.createNewFile();
+            FileReader fr = new FileReader(file);
+            BufferedReader bfr = new BufferedReader(fr);
+            String line = bfr.readLine();
+            while (line != null) {
+                list.add(line);
+                line = bfr.readLine();
+            }
+            bfr.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int length = list.size();
+        if ((length - 1) % 6 == 0 && length >= 7) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //Writes quiz to quiz file and returns quiz title
+    public static String uploadQuiz(String course, String filename) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            File file = new File(filename);
+            file.createNewFile();
+            FileReader fr = new FileReader(file);
+            BufferedReader bfr = new BufferedReader(fr);
+            String line = bfr.readLine();
+            while (line != null) {
+                list.add(line);
+                line = bfr.readLine();
+            }
+            bfr.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String quizName = list.get(0);
+        String outputFilename = course + "@" + quizName + ".txt";
+        try {
+            File file = new File(outputFilename);
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file, false);
+            PrintWriter pw = new PrintWriter(fos);
+            pw.println(String.format(quizName));
+            for (int i = 1; i < list.size(); i += 6) {
+                String question = list.get(i);
+                String answerA = list.get(i + 1);
+                String answerB = list.get(i + 2);
+                String answerC = list.get(i + 3);
+                String answerD = list.get(i + 4);
+                String correctAnswer = list.get(i + 5);
+                String questionLine = "";
+                if (correctAnswer.equals(answerA)) {
+                    questionLine = String.format("MCQ@" + question + "@AR:" + answerA + "@B:" + answerB +
+                    "@C:" + answerC + "@D:" + answerD);
+                } else if (correctAnswer.equals(answerB)) {
+                    questionLine = String.format("MCQ@" + question + "@A:" + answerA + "@BR:" + answerB +
+                    "@C:" + answerC + "@D:" + answerD);
+                } else if (correctAnswer.equals(answerC)) {
+                    questionLine = String.format("MCQ@" + question + "@A:" + answerA + "@B:" + answerB +
+                    "@CR:" + answerC + "@D:" + answerD);
+                } else {
+                    questionLine = String.format("MCQ@" + question + "@A:" + answerA + "@B:" + answerB +
+                    "@C:" + answerC + "@DR:" + answerD);
+                }
+                pw.println(questionLine);
+            }
+            pw.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return quizName;
+    }
+
+    //adds quiz name to course file that keeps track of its quizzes
+    public static void addQuizToCourse(String quizName, String course) {
+        try {
+            File file = new File(course + "@quizzes.txt");
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file, true);
+            PrintWriter pw = new PrintWriter(fos);
+            pw.println(quizName);
+            pw.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteQuiz(String courseName, String quizName) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            File file = new File(courseName + "@quizzes.txt");
+            file.createNewFile();
+
+            FileReader fr = new FileReader(file);
+            BufferedReader bfr = new BufferedReader(fr);
+            String line = bfr.readLine();
+            while (line != null) {
+                list.add(line);
+                line = bfr.readLine();
+            }
+            bfr.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int lineNumber = -1;
+        for (int i = 0; i < list.size(); i++) {
+            String tempQuizName = list.get(i);
+            if (tempQuizName.equals(quizName)) {
+                lineNumber = i;
+            }
+        }
+
+        if (lineNumber >= 0) {
+            try {
+                FileOutputStream fos = new FileOutputStream(courseName + "@quizzes.txt", false);
+                PrintWriter pw = new PrintWriter(fos);
+                for (int i = 0; i < lineNumber; i++) {
+                    pw.println(list.get(i));
+                }
+                for (int i = (lineNumber + 1); i < list.size(); i++) {
+                    pw.println(list.get(i));
+                }
+                pw.close();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void changeTeacherPassword(String username, String password, String newPassword) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            File file = new File("users.txt");
+            file.createNewFile();
+
+            FileReader fr = new FileReader(file);
+            BufferedReader bfr = new BufferedReader(fr);
+            String line = bfr.readLine();
+            while (line != null) {
+                list.add(line);
+                line = bfr.readLine();
+            }
+            bfr.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int lineNumber = -1;
+        for (int i = 0; i < list.size(); i += 2) {
+            if (list.get(i).equals("T@" + username) && list.get(i + 1).equals(password)) {
+                lineNumber = i + 1;
+            }
+        }
+        if (lineNumber >= 0) {
+            try {
+                FileOutputStream fos = new FileOutputStream("users.txt", false);
+                PrintWriter pw = new PrintWriter(fos);
+                for (int i = 0; i < lineNumber; i++) {
+                    pw.println(list.get(i));
+                }
+                pw.println(newPassword);
+                for (int i = (lineNumber + 1); i < list.size(); i++) {
+                    pw.println(list.get(i));
+                }
+                pw.close();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void changeStudentPassword(String username, String password, String newPassword) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            File file = new File("users.txt");
+            file.createNewFile();
+
+            FileReader fr = new FileReader(file);
+            BufferedReader bfr = new BufferedReader(fr);
+            String line = bfr.readLine();
+            while (line != null) {
+                list.add(line);
+                line = bfr.readLine();
+            }
+            bfr.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int lineNumber = -1;
+        for (int i = 0; i < list.size(); i += 2) {
+            if (list.get(i).equals("S@" + username) && list.get(i + 1).equals(password)) {
+                lineNumber = i + 1;
+            }
+        }
+        if (lineNumber >= 0) {
+            try {
+                FileOutputStream fos = new FileOutputStream("users.txt", false);
+                PrintWriter pw = new PrintWriter(fos);
+                for (int i = 0; i < lineNumber; i++) {
+                    pw.println(list.get(i));
+                }
+                pw.println(newPassword);
+                for (int i = (lineNumber + 1); i < list.size(); i++) {
+                    pw.println(list.get(i));
+                }
+                pw.close();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 
         while (true) {
@@ -772,8 +1015,71 @@ public class Server {
                                     case "Edit a Quiz":
                                         break;
                                     case "Delete a Quiz":
+                                        String[] courseList = getCourses();
+                                        String courseListLength = String.valueOf(courseList.length);
+                                        writer.write(courseListLength);
+                                        writer.println();
+                                        writer.flush();
+                                        for (int i = 0; i < courseList.length; i++) {
+                                            writer.write(courseList[i]);
+                                            writer.println();
+                                            writer.flush();
+                                        }
+                                        String courseChoice = reader.readLine();
+                                        if (courseChoice != "null") {
+                                            String[] quizzes = getQuizList(courseChoice);
+                                            String quizzesLength = String.valueOf(quizzes.length);
+                                            writer.write(quizzesLength);
+                                            writer.println();
+                                            writer.flush();
+                                            for (int i = 0; i < quizzes.length; i++) {
+                                                writer.write(quizzes[i]);
+                                                writer.println();
+                                                writer.flush();
+                                            }
+                                            String quizChoice = reader.readLine();
+                                            if (quizChoice != "null") {
+                                                deleteQuiz(courseChoice, quizChoice);
+                                            } else {
+                                                continueLoop = false;
+                                            }
+                                        } else {
+                                            continueLoop = false;
+                                        }
                                         break;
                                     case "Upload a Quiz":
+                                        String[] coursesOptions = getCourses();
+                                        String coursesOptionsLength = String.valueOf(coursesOptions.length);
+                                        writer.write(coursesOptionsLength);
+                                        writer.println();
+                                        writer.flush();
+                                        for (int i = 0; i < coursesOptions.length; i++) {
+                                            writer.write(coursesOptions[i]);
+                                            writer.println();
+                                            writer.flush();
+                                        }
+                                        String courseOption = reader.readLine();
+                                        if (courseOption != "null") {
+                                            String inputFileName = reader.readLine();
+                                            if (inputFileName != "null") {
+                                                boolean valid = checkFileValidity(inputFileName);
+                                                if (valid) {
+                                                    String quizName = uploadQuiz(courseOption, inputFileName);
+                                                    addQuizToCourse(quizName, courseOption);
+                                                    writer.write("success");
+                                                    writer.println();
+                                                    writer.flush(); 
+                                                } else {
+                                                    writer.write("fail");
+                                                    writer.println();
+                                                    writer.flush(); 
+                                                }
+                                            } else {
+                                                continueLoop = false;
+                                            }
+                                        } else {
+                                            continueLoop = false;
+                                        }
                                         break;
                                     case "View Scores":
                                         String[] studentList = getStudentUsernames();
@@ -787,7 +1093,43 @@ public class Server {
                                             writer.flush();
                                         }
                                         String studentOption = reader.readLine();
-                                        
+                                        if (!studentOption.equals("null")) {
+                                            String[] studentQuizzes = getCompletedQuizzesList(studentOption);
+                                            String studentQuizzesLength = String.valueOf(studentQuizzes.length);
+                                            writer.write(studentQuizzesLength);
+                                            writer.println();
+                                            writer.flush();
+                                            for (int i = 0; i < studentQuizzes.length; i++) {
+                                                writer.write(studentQuizzes[i]);
+                                                writer.println();
+                                                writer.flush();
+                                            }
+                                            String quizOption = reader.readLine();
+                                            if (!quizOption.equals("null")) {
+                                                String quizScore = getQuizScore(quizOption);
+                                                writer.write(quizScore);
+                                                writer.println();
+                                                writer.flush();
+                                            } else {
+                                                continueLoop = false;
+                                            }
+                                        } else {
+                                            continueLoop = false;
+                                        }
+                                        break;
+                                    case "Edit Account":
+                                        String yesNo = reader.readLine();
+                                        if (yesNo.equals("null")) {
+                                            continueLoop = false;
+                                        } else if (yesNo.equals("Yes")) {
+                                            String newPassword = reader.readLine();
+                                            if (newPassword.equals(" ")) {
+                                            } else if (!newPassword.equals("null")) {
+                                                changeTeacherPassword(username, password, newPassword);
+                                            } else {
+                                                continueLoop = false;
+                                            }
+                                        }
                                         break;
                                     case "Log Out":
                                         continueLoop = false;
@@ -929,6 +1271,20 @@ public class Server {
                                             writer.flush();
                                         } else {
                                             continueLoop = false;
+                                        }
+                                        break;
+                                    case "Edit Account":
+                                        String yesNo = reader.readLine();
+                                        if (yesNo.equals("null")) {
+                                            continueLoop = false;
+                                        } else if (yesNo.equals("Yes")) {
+                                            String newPassword = reader.readLine();
+                                            if (newPassword.equals(" ")) {
+                                            } else if (!newPassword.equals("null")) {
+                                                changeStudentPassword(username, password, newPassword);
+                                            } else {
+                                                continueLoop = false;
+                                            }
                                         }
                                         break;
                                     case "Log Out":

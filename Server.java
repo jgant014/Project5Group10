@@ -1,6 +1,11 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+
 
 public class Server {
 
@@ -338,7 +343,7 @@ public class Server {
     // and correct answer
     // List format [quiz name, question 1, a, b, c, d, correct answer, question 2,
     // etc...]
-    public static String[] getQuiz(String quizFileName) {
+    public static String[] getQuiz(String quizFileName, Boolean randomized) {
         ArrayList<String> list = new ArrayList<>();
         try {
             File quizFile = new File(quizFileName);
@@ -357,6 +362,14 @@ public class Server {
             e.printStackTrace();
         }
 
+        String[] array = new String[list.size()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = list.get(i);
+        }
+        if (randomized) {
+            array = shuffleQuestions(array);
+        }
+
         // Passing 6 Variables Per Question (Question Statement, 4 Options, and Correct
         // Option) + Quiz Name
 
@@ -364,11 +377,12 @@ public class Server {
 
         tempQuestionsList.add(list.get(0));
         for (int i = 1; i < list.size(); i++) {
+            String l = array[i];
             // Gets the substring of the question and adds it to tempList
-            tempQuestionsList.add(list.get(i).substring(4, list.get(i).indexOf("@", 4)));
+            tempQuestionsList.add(l.substring(4, l.indexOf("@", 4)));
 
             // Gets the whole question line and stores it in String l
-            String l = list.get(i);
+            
 
             // Finds the correct answer and stores it in correctAnswer by looking for the
             // key @AR: @BR: @CR: or @DR: R stands for right, then deletes the R from the
@@ -445,6 +459,8 @@ public class Server {
         }
         return quizList;
     }
+
+    
 
     // Adds attempt for a quiz into quiz attempts once done
     public static void addAttempt(String username, String courseName, String quizName, int attemptNumber) {
@@ -560,6 +576,46 @@ public class Server {
         }
     }
 
+    public static void createPersonalQuizVersion(String[] quiz, String filename) {
+        String quizName = quiz[0];
+        try {
+            File file = new File(filename);
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file, false);
+            PrintWriter pw = new PrintWriter(fos);
+            pw.println(String.format(quizName));
+            for (int i = 1; i < quiz.length; i += 6) {
+                String question = quiz[i];
+                String answerA = quiz[i + 1];
+                String answerB = quiz[i + 2];
+                String answerC = quiz[i + 3];
+                String answerD = quiz[i + 4];
+                String correctAnswer = quiz[i + 5];
+                String questionLine = "";
+                if (correctAnswer.equals(answerA)) {
+                    questionLine = String.format("MCQ@" + question + "@AR:" + answerA + "@B:" + answerB +
+                    "@C:" + answerC + "@D:" + answerD);
+                } else if (correctAnswer.equals(answerB)) {
+                    questionLine = String.format("MCQ@" + question + "@A:" + answerA + "@BR:" + answerB +
+                    "@C:" + answerC + "@D:" + answerD);
+                } else if (correctAnswer.equals(answerC)) {
+                    questionLine = String.format("MCQ@" + question + "@A:" + answerA + "@B:" + answerB +
+                    "@CR:" + answerC + "@D:" + answerD);
+                } else {
+                    questionLine = String.format("MCQ@" + question + "@A:" + answerA + "@B:" + answerB +
+                    "@C:" + answerC + "@DR:" + answerD);
+                }
+                pw.println(questionLine);
+            }
+            pw.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    } 
+
     //Writes the score of the quiz at the end
     public static void gradeQuiz(String progressFile) {
         ArrayList<String> list = new ArrayList<>();
@@ -659,6 +715,27 @@ public class Server {
             e.printStackTrace();
         }
         return (list.get(list.size() - 1).substring(1));
+    }
+
+    //returns the timestamp for a specific quiz
+    public static String getTimestamp(String progressFile) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            FileReader fr = new FileReader(progressFile);
+            BufferedReader bfr = new BufferedReader(fr);
+            String line = bfr.readLine();
+            while (line != null) {
+                list.add(line);
+                line = bfr.readLine();
+            }
+            bfr.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return (list.get(list.size() - 2));
     }
 
     //Returns string list of all student usernames
@@ -850,6 +927,16 @@ public class Server {
         }
     }
 
+    //Returns true if quiz is a random quiz
+    //Returns false if quiz is not a random quiz
+    public static boolean isRandom(String quizOption) {
+        if (quizOption.indexOf("Random") != -1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static void changeTeacherPassword(String username, String password, String newPassword) {
         ArrayList<String> list = new ArrayList<>();
         try {
@@ -930,6 +1017,145 @@ public class Server {
                 }
                 pw.println(newPassword);
                 for (int i = (lineNumber + 1); i < list.size(); i++) {
+                    pw.println(list.get(i));
+                }
+                pw.close();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static String[] shuffleQuestions(String[] arr) {
+        Random rand = new Random();
+        String[] array = new String[arr.length - 1] ;
+        for (int i = 0 ; i < arr.length ; i++) {
+            if (!(i == 0)) {
+                array[i - 1] = arr[i] ;
+            }
+        }
+        for (int i = 0; i < array.length; i++) {
+            int randomIndexToSwap = rand.nextInt(array.length);
+            String temp = array[randomIndexToSwap];
+            array[randomIndexToSwap] = array[i];
+            array[i] = temp;
+        }
+        String[] returnArray = new String[arr.length] ;
+        for (int i = 1 ; i < arr.length ; i++) {
+            returnArray[i] = array[i - 1] ;
+        }
+        return returnArray ;
+    }
+
+
+    //Timestamps progress quiz file
+    public static void timeStampQuiz(String progressFile) throws IOException {
+        File f = new File(progressFile) ;
+        BufferedReader read = new BufferedReader(new FileReader(f)) ;
+        String str = read.readLine() ;
+        String append = "" ;
+        while(str != null) {
+            append += str + "\n";
+            str = read.readLine() ;
+        }
+        PrintWriter pw = new PrintWriter(new FileWriter(f), true) ;
+        pw.print(append) ;
+        Date date = new Date();
+        Timestamp ts = new Timestamp(date.getTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        pw.println(formatter.format(ts));
+        pw.close() ;
+        read.close() ;
+    }
+
+    public static void addRandom(String inputFileName) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            File file = new File(inputFileName);
+            file.createNewFile();
+
+            FileReader fr = new FileReader(file);
+            BufferedReader bfr = new BufferedReader(fr);
+            String line = bfr.readLine();
+            while (line != null) {
+                list.add(line);
+                line = bfr.readLine();
+            }
+            bfr.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String quizname = list.get(0) + " Random";
+        try {
+            FileOutputStream fos = new FileOutputStream(inputFileName, false);
+            PrintWriter pw = new PrintWriter(fos);
+            pw.println(quizname);
+            pw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(inputFileName, true);
+            PrintWriter pw = new PrintWriter(fos);
+            for (int i = 1; i < list.size(); i++) {
+                pw.println(list.get(i));
+            }
+            pw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteAccount(String username, String password, String identification) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            File file = new File("users.txt");
+            file.createNewFile();
+
+            FileReader fr = new FileReader(file);
+            BufferedReader bfr = new BufferedReader(fr);
+            String line = bfr.readLine();
+            while (line != null) {
+                list.add(line);
+                line = bfr.readLine();
+            }
+            bfr.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int usernameLine = -1;
+        int passwordLine = -1;
+        if (identification.equals("Student")) {
+            for (int i = 0; i < list.size(); i += 2) {
+                if (list.get(i).equals("S@" + username) && list.get(i + 1).equals(password)) {
+                    usernameLine = i;
+                    passwordLine = i + 1;
+                }
+            }
+        } else if (identification.equals("Teacher")) {
+            for (int i = 0; i < list.size(); i += 2) {
+                if (list.get(i).equals("T@" + username) && list.get(i + 1).equals(password)) {
+                    usernameLine = i;
+                    passwordLine = i + 1;
+                }
+            }
+        }
+        
+        if (usernameLine >= 0 && passwordLine >= 1) {
+            try {
+                FileOutputStream fos = new FileOutputStream("users.txt", false);
+                PrintWriter pw = new PrintWriter(fos);
+                for (int i = 0; i < usernameLine; i++) {
+                    pw.println(list.get(i));
+                }
+                for (int i = (passwordLine + 1); i < list.size(); i++) {
                     pw.println(list.get(i));
                 }
                 pw.close();
@@ -1059,20 +1285,28 @@ public class Server {
                                             writer.flush();
                                         }
                                         String courseOption = reader.readLine();
-                                        if (courseOption != "null") {
+                                        if (!courseOption.equals("null")) {
                                             String inputFileName = reader.readLine();
-                                            if (inputFileName != "null") {
-                                                boolean valid = checkFileValidity(inputFileName);
-                                                if (valid) {
-                                                    String quizName = uploadQuiz(courseOption, inputFileName);
-                                                    addQuizToCourse(quizName, courseOption);
-                                                    writer.write("success");
-                                                    writer.println();
-                                                    writer.flush(); 
+                                            if (!inputFileName.equals("null")) {
+                                                String randomized = reader.readLine();
+                                                if (!randomized.equals("null")) {
+                                                    boolean valid = checkFileValidity(inputFileName);
+                                                    if (valid) {
+                                                        if (randomized.equals("Yes")) {
+                                                            addRandom(inputFileName);
+                                                        }
+                                                        String quizName = uploadQuiz(courseOption, inputFileName);
+                                                        addQuizToCourse(quizName, courseOption);
+                                                        writer.write("success");
+                                                        writer.println();
+                                                        writer.flush(); 
+                                                    } else {
+                                                        writer.write("fail");
+                                                        writer.println();
+                                                        writer.flush(); 
+                                                    }
                                                 } else {
-                                                    writer.write("fail");
-                                                    writer.println();
-                                                    writer.flush(); 
+                                                    continueLoop = false;
                                                 }
                                             } else {
                                                 continueLoop = false;
@@ -1110,6 +1344,10 @@ public class Server {
                                                 writer.write(quizScore);
                                                 writer.println();
                                                 writer.flush();
+                                                String timestamp = getTimestamp(quizOption);
+                                                writer.write(timestamp);
+                                                writer.println();
+                                                writer.flush();
                                             } else {
                                                 continueLoop = false;
                                             }
@@ -1129,6 +1367,15 @@ public class Server {
                                             } else {
                                                 continueLoop = false;
                                             }
+                                        }
+                                        break;
+                                    case "Delete Account":
+                                        String yesNoChoice = reader.readLine();
+                                        if (yesNoChoice.equals(null)) {
+                                            continueLoop = false;
+                                        } else if (yesNoChoice.equals("Yes")) {
+                                            continueLoop = false;
+                                            deleteAccount(username, password, identification);
                                         }
                                         break;
                                     case "Log Out":
@@ -1177,9 +1424,12 @@ public class Server {
                                                     String quizProgressFilename = username + "@" + courseOption +
                                                             "@" + quizOption + "@" +
                                                             getAttempt(username, courseOption, quizOption) + ".txt";
-                                                    String[] quizList = getQuizInProgress(
-                                                            (courseOption + "@" + quizOption + ".txt"),
+                                                    String quizVersionFilename = username + "@" + courseOption +
+                                                            "@" + quizOption + "@" +
+                                                            getAttempt(username, courseOption, quizOption) + "@Ver.txt";
+                                                    String[] quizList = getQuizInProgress(quizVersionFilename,
                                                             quizProgressFilename);
+                                                    
                                                     String quizListLength = String.valueOf(quizList.length);
                                                     writer.write(quizListLength);
                                                     writer.println();
@@ -1207,14 +1457,20 @@ public class Server {
                                                         }
                                                     }
                                                     addAttempt(username, courseOption, quizOption,
-                                                            getAttempt(username, courseOption, quizOption));
+                                                        getAttempt(username, courseOption, quizOption));
+                                                    timeStampQuiz(quizProgressFilename);
                                                     gradeQuiz(quizProgressFilename);
+                                                    
                                                 } else {
                                                     String quizProgressFilename = username + "@" + courseOption +
                                                             "@" + quizOption + "@" +
                                                             getAttempt(username, courseOption, quizOption) + ".txt";
                                                     String[] quizList = getQuiz(
-                                                            courseOption + "@" + quizOption + ".txt");
+                                                            courseOption + "@" + quizOption + ".txt", isRandom(quizOption));
+                                                    String quizVersionFilename = username + "@" + courseOption +
+                                                        "@" + quizOption + "@" +
+                                                        getAttempt(username, courseOption, quizOption) + "@Ver.txt";
+                                                    createPersonalQuizVersion(quizList, quizVersionFilename);
                                                     String quizListLength = String.valueOf(quizList.length);
                                                     writer.write(quizListLength);
                                                     writer.println();
@@ -1224,6 +1480,7 @@ public class Server {
                                                         writer.println();
                                                         writer.flush();
                                                     }
+                                                    boolean finished = false;
                                                     for (int i = 0; i < ((quizList.length - 1) / 6); i++) {
                                                         String quizName = quizList[0];
                                                         String answerChoice = reader.readLine();
@@ -1239,11 +1496,18 @@ public class Server {
                                                             }
                                                             writeToProgressFile(quizProgressFilename, quizName,
                                                                     questionStatement, correct);
+                                                            finished = true;
+                                                        } else {
+                                                            finished = false;
+                                                            break;
                                                         }
                                                     }
+                                                    if (finished) {
                                                     addAttempt(username, courseOption, quizOption,
-                                                            getAttempt(username, courseOption, quizOption));
-                                                    gradeQuiz(quizProgressFilename);
+                                                        getAttempt(username, courseOption, quizOption));
+                                                    timeStampQuiz(quizProgressFilename);
+                                                    gradeQuiz(quizProgressFilename); 
+                                                    }
                                                 }
                                             } else {
                                                 continueLoop = false;
@@ -1266,7 +1530,11 @@ public class Server {
                                         String quizAttemptChoice = reader.readLine();
                                         if (!quizAttemptChoice.equals("null")) {
                                             String score = getQuizScore(quizAttemptChoice);
+                                            String timestamp = getTimestamp(quizAttemptChoice);
                                             writer.write(score);
+                                            writer.println();
+                                            writer.flush();
+                                            writer.write(timestamp);
                                             writer.println();
                                             writer.flush();
                                         } else {
@@ -1285,6 +1553,15 @@ public class Server {
                                             } else {
                                                 continueLoop = false;
                                             }
+                                        }
+                                        break;
+                                    case "Delete Account":
+                                        String yesNoChoice = reader.readLine();
+                                        if (yesNoChoice.equals(null)) {
+                                            continueLoop = false;
+                                        } else if (yesNoChoice.equals("Yes")) {
+                                            continueLoop = false;
+                                            deleteAccount(username, password, identification);
                                         }
                                         break;
                                     case "Log Out":

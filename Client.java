@@ -1,8 +1,22 @@
 import java.io.*;
 import java.net.*;
 import javax.swing.*;
+import java.util.Random;
+
+
 
 public class Client {
+
+    public static String[] shuffleAnswerChoice(String[] array) {
+        Random rand = new Random();
+        for (int i = 0; i < array.length; i++) {
+            int randomIndexToSwap = rand.nextInt(array.length);
+            String temp = array[randomIndexToSwap];
+            array[randomIndexToSwap] = array[i];
+            array[i] = temp;
+        }
+        return array;
+    }
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         Socket socket = new Socket("localhost", 9999);
 
@@ -88,7 +102,7 @@ public class Client {
                     boolean continueLoop = true;
                     do {
                         String[] teacherOptions = { "Add Course", "Delete a Course", "Create a Quiz", "Edit a Quiz", "Delete a Quiz",
-                                "Upload a Quiz", "View Scores", "Edit Account", "Log Out" };
+                                "Upload a Quiz", "View Scores", "Edit Account", "Delete Account", "Log Out" };
                         String teacherOption = (String) JOptionPane.showInputDialog(
                                 null, "What would you like to do?", "Actions",
                                 JOptionPane.QUESTION_MESSAGE, null, teacherOptions, teacherOptions[0]);
@@ -213,13 +227,26 @@ public class Client {
                                         writer.write(inputFilename);
                                         writer.println();
                                         writer.flush();
-                                        String result = reader.readLine();
-                                        if (result.equals("success")) {
-                                            JOptionPane.showMessageDialog(null, "Successfully uploaded quiz.", "Success",
-                                                JOptionPane.INFORMATION_MESSAGE);
+                                        String[] yesNoOptions = {"No", "Yes"};
+                                        String yesNo = (String) JOptionPane.showInputDialog(
+                                            null, "Would you like to make quiz questions randomized?", "Randomize Option",
+                                            JOptionPane.QUESTION_MESSAGE, null, yesNoOptions, yesNoOptions[0]);
+                                        if (yesNo == null) {
+                                            writer.write("null");
+                                            writer.println();
+                                            writer.flush();
                                         } else {
-                                            JOptionPane.showMessageDialog(null, "File does not exist or is in the wrong format.", "Error",
-                                                JOptionPane.ERROR_MESSAGE);
+                                            writer.write(yesNo);
+                                            writer.println();
+                                            writer.flush();
+                                            String result = reader.readLine();
+                                            if (result.equals("success")) {
+                                                JOptionPane.showMessageDialog(null, "Successfully uploaded quiz.", "Success",
+                                                    JOptionPane.INFORMATION_MESSAGE);
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "File does not exist or is in the wrong format.", "Error",
+                                                    JOptionPane.ERROR_MESSAGE);
+                                            }
                                         }
                                     }
                                 }
@@ -260,7 +287,8 @@ public class Client {
                                         writer.println();
                                         writer.flush();
                                         String quizScore = reader.readLine();
-                                        JOptionPane.showMessageDialog(null, quizScore, quizOption + " Score",
+                                        String timestamp = reader.readLine();
+                                        JOptionPane.showMessageDialog(null, quizScore + "\nSubmitted " + timestamp, quizOption + " Score",
                                             JOptionPane.INFORMATION_MESSAGE);
                                     }
                                 }
@@ -301,6 +329,26 @@ public class Client {
                                     }
                                 }
                                 break;
+                            case "Delete Account":
+                                String[] yesNoList = {"No", "Yes"};
+                                String yesNoChoice = (String) JOptionPane.showInputDialog(
+                                    null, "Are you sure you would like to terminate this account?", "WARNING",
+                                    JOptionPane.QUESTION_MESSAGE, null, yesNoList, yesNoList[0]);
+                                if (yesNoChoice == null) {
+                                    writer.write("null");
+                                    writer.println();
+                                    writer.flush();
+                                } else {
+                                    writer.write(yesNoChoice);
+                                    writer.println();
+                                    writer.flush();
+                                    if (yesNoChoice.equals("Yes")) {
+                                        JOptionPane.showMessageDialog(null, "Account Deleted.\nLogging out.", "Success",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                                        continueLoop = false;
+                                    }
+                                }
+                                break;
                             case "Log Out":
                                 continueLoop = false;
                                 break;
@@ -309,7 +357,7 @@ public class Client {
                 } else if (identification.equals("Student")) {
                     boolean continueLoop = true;
                     do {
-                        String[] studentOptions = {"Take a Quiz", "View Scores", "Edit Account", "Log Out"};
+                        String[] studentOptions = {"Take a Quiz", "View Scores", "Edit Account", "Delete Account", "Log Out"};
                         String studentOption = (String) JOptionPane.showInputDialog(
                                 null, "What would you like to do?", "Actions",
                                 JOptionPane.QUESTION_MESSAGE, null, studentOptions, studentOptions[0]);
@@ -361,10 +409,12 @@ public class Client {
                                             quizList[i] = reader.readLine();
                                         }
                                         String quizName = quizList[0];
+                                        boolean finished = false;
                                         for (int i = 1; i < quizListLength; i += 6) {
                                             String question = quizList[i];
                                             String[] options = { quizList[i + 1], quizList[i + 2],
                                                     quizList[i + 3], quizList[i + 4] };
+                                            options = shuffleAnswerChoice(options);
                                             String correctAnswer = quizList[i + 5];
                                             String quizListOption = (String) JOptionPane.showInputDialog(
                                                     null, question, quizName,
@@ -379,6 +429,7 @@ public class Client {
                                                 writer.write("null");
                                                 writer.println();
                                                 writer.flush();
+                                                finished = false;
                                                 continueLoop = false;
                                                 break;
                                             } else {
@@ -391,11 +442,14 @@ public class Client {
                                                 writer.write(question);
                                                 writer.println();
                                                 writer.flush();
+                                                finished = true;
                                             }
                                         }
+                                        if (finished) {
                                         JOptionPane.showMessageDialog(null, "You have completed the quiz.",
                                             "Congratulations",
                                             JOptionPane.INFORMATION_MESSAGE);
+                                        }
                                     }
                                 }
                                 break;
@@ -418,7 +472,8 @@ public class Client {
                                     writer.println();
                                     writer.flush();
                                     String score = reader.readLine();
-                                    JOptionPane.showMessageDialog(null, score, quizAttemptOption + " Score",
+                                    String timestamp = reader.readLine();
+                                    JOptionPane.showMessageDialog(null, score + "\nSubmitted " + timestamp, quizAttemptOption + " Score",
                                             JOptionPane.INFORMATION_MESSAGE);
                                 }
                                 break;
@@ -455,6 +510,26 @@ public class Client {
                                             JOptionPane.showMessageDialog(null, "Password has been changed.", "Success",
                                                 JOptionPane.INFORMATION_MESSAGE);
                                         }
+                                    }
+                                }
+                                break;
+                            case "Delete Account":
+                                String[] yesNoList = {"No", "Yes"};
+                                String yesNoChoice = (String) JOptionPane.showInputDialog(
+                                    null, "Are you sure you would like to terminate this account?", "WARNING",
+                                    JOptionPane.QUESTION_MESSAGE, null, yesNoList, yesNoList[0]);
+                                if (yesNoChoice == null) {
+                                    writer.write("null");
+                                    writer.println();
+                                    writer.flush();
+                                } else {
+                                    writer.write(yesNoChoice);
+                                    writer.println();
+                                    writer.flush();
+                                    if (yesNoChoice.equals("Yes")) {
+                                        JOptionPane.showMessageDialog(null, "Account Deleted.\nLogging out.", "Success",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                                        continueLoop = false;
                                     }
                                 }
                                 break;

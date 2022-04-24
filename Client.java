@@ -2,10 +2,36 @@ import java.io.*;
 import java.net.*;
 import javax.swing.*;
 import java.util.Random;
-
+import java.util.concurrent.CountDownLatch;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.border.EmptyBorder;
 
 
 public class Client {
+
+    static JTextField tf_question;
+    static JTextField tf_correctOption;
+    static JTextField tf_option2;
+    static JTextField tf_option3;
+    static JTextField tf_option4;
+    static JLabel question;
+    static JLabel title;
+    static JLabel correctOption;
+    static JLabel options2;
+    static JLabel options3;
+    static JLabel options4;
+    static JButton btn;
+    static JFrame frame;
+    static String questionSub;
+    static String correctAnswerSub;
+    static String option2Sub;
+    static String option3Sub;
+    static String option4Sub;
+    static CountDownLatch latch;
+    static String[] qG;
 
     public static String[] shuffleAnswerChoice(String[] array) {
         Random rand = new Random();
@@ -17,15 +43,123 @@ public class Client {
         }
         return array;
     }
-    public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
+
+    public static void quizGui() {
+        frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800,600);
+        frame.setTitle("Add Question");
+        frame.setLocationRelativeTo(null);
+        frame.setLayout(null);
+
+        title = new JLabel("Multiple Choice Question");
+        title.setBounds(200,50,360,50);
+        title.setFont(new Font("Arial", Font.BOLD, 28));
+        title.setBackground(Color.BLUE);
+        title.setOpaque(true);
+        title.setForeground(Color.WHITE);
+        title.setBorder(new EmptyBorder(0,10,0,0));
+
+        question = new JLabel("Question: ");
+        question.setBounds(186,130,500,50);
+        question.setFont(new Font("Arial", Font.BOLD, 18));
+        question.setBorder(new EmptyBorder(0,10,0,0));
+
+        btn = new JButton("Submit");
+        btn.setBounds(250,420,250,50);
+        btn.setFocusable(false);
+        btn.setFont(new Font("Arial",Font.BOLD,18));
+        btn.setBackground(Color.RED);
+        btn.setForeground(Color.WHITE);
+        btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == btn) {
+                    try {
+                        qG[0] = tf_question.getText();
+                        qG[1] = tf_correctOption.getText();
+                        qG[2] = tf_option2.getText();
+                        qG[3] = tf_option3.getText();
+                        qG[4] = tf_option4.getText();
+                        latch.countDown();
+                        frame.dispose();
+                    } catch (NumberFormatException ex) {
+                        ex.printStackTrace();
+                    }     
+                }
+            }
+        });
+
+        correctOption = new JLabel("Correct Answer Choice:");
+        correctOption.setBounds(62,180,300,50);
+        correctOption.setFont(new Font("Arial", Font.BOLD, 18));
+        correctOption.setBorder(new EmptyBorder(0,10,0,0));
+
+        options2 = new JLabel("Incorrect Answer Choice:");
+        options2.setBounds(50,230,300,50);
+        options2.setFont(new Font("Arial", Font.BOLD, 18));
+        options2.setBorder(new EmptyBorder(0,10,0,0));
+
+        options3 = new JLabel("Incorrect Answer Choice:");
+        options3.setBounds(50,280,300,50);
+        options3.setFont(new Font("Arial", Font.BOLD, 18));
+        options3.setBorder(new EmptyBorder(0,10,0,0));
+
+        options4 = new JLabel("Incorrect Answer Choice:");
+        options4.setBounds(50,330,300,50);
+        options4.setFont(new Font("Arial", Font.BOLD, 18));
+        options4.setBorder(new EmptyBorder(0,10,0,0));
+
+        tf_question = new JTextField(40);
+        tf_question.setFont(new Font("Arial", Font.BOLD, 16));
+        tf_question.setBounds(300, 130, 300, 50);
+
+        tf_correctOption = new JTextField(40);
+        tf_correctOption.setFont(new Font("Arial", Font.BOLD, 16));
+        tf_correctOption.setBounds(300, 180, 300, 50);
+
+        tf_option2 = new JTextField(40);
+        tf_option2.setFont(new Font("Arial", Font.BOLD, 16));
+        tf_option2.setBounds(300, 230, 300, 50);
+
+        tf_option3 = new JTextField(40);
+        tf_option3.setFont(new Font("Arial", Font.BOLD, 16));
+        tf_option3.setBounds(300, 280, 300, 50);
+
+        tf_option4 = new JTextField(40);
+        tf_option4.setFont(new Font("Arial", Font.BOLD, 16));
+        tf_option4.setBounds(300, 330, 300, 50);
+
+
+        frame.add(title);
+        frame.add(question);
+        frame.add(tf_question);
+        frame.add(tf_correctOption);
+        frame.add(tf_option2);
+        frame.add(tf_option3);
+        frame.add(tf_option4);
+        frame.add(btn);
+        frame.add(correctOption);
+        frame.add(options2);
+        frame.add(options3);
+        frame.add(options4);
+        frame.setVisible(true);
+        //SwingUtilities.invokeLater((Runnable) new MyFrame());
+    }
+    public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {
+        qG = new String[5];
         Socket socket = new Socket("localhost", 9999);
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter writer = new PrintWriter(socket.getOutputStream());
 
+        String identification;
+        String loginOption;
+        String username;
+        String password;
+
         do {
             String[] identifications = { "Student", "Teacher" };
-            String identification = (String) JOptionPane.showInputDialog(
+            identification = (String) JOptionPane.showInputDialog(
                     null,
                     "Are you a Student or Teacher?",
                     "Login",
@@ -34,54 +168,72 @@ public class Client {
                     identifications,
                     identifications[0]);
             if (identification == null) {
+                writer.write("null");
+                writer.println();
+                writer.flush();
                 break;
+            } else {
+                writer.write(identification);
+                writer.println();
+                writer.flush();
+                String[] loginOptions = { "Login", "Create an Account" };
+                loginOption = (String) JOptionPane.showInputDialog(
+                        null,
+                        "Would you like to login or create an account?",
+                        "Login",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        loginOptions,
+                        loginOptions[0]);
+                if (loginOption == null) {
+                    writer.write("null");
+                    writer.println();
+                    writer.flush();
+                    break;
+                } else {
+                    writer.write(loginOption);
+                    writer.println();
+                    writer.flush();
+                    username = JOptionPane.showInputDialog(null, "Enter your username.", "Username",
+                            JOptionPane.QUESTION_MESSAGE);
+                    if (username == null) {
+                        writer.write("null");
+                        writer.println();
+                        writer.flush();
+                        break;
+                    } else if (username.trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Invalid username.", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                        writer.write("null");
+                        writer.println();
+                        writer.flush();
+                        break;
+                    } else {
+                        writer.write(username.trim());
+                        writer.println();
+                        writer.flush();
+                        password = JOptionPane.showInputDialog(null, "Enter your password.", "Password",
+                                JOptionPane.QUESTION_MESSAGE);
+                        if (password == null) {
+                            writer.write("null");
+                            writer.println();
+                            writer.flush();
+                            break;
+                        } else if (password.trim().isEmpty()) {
+                            writer.write("null");
+                            writer.println();
+                            writer.flush();
+                            JOptionPane.showMessageDialog(null, "Invalid password.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                            break;
+                        } else {
+                            writer.write(password.trim());
+                            writer.println();
+                            writer.flush();
+                        }
+                    }
+                }
             }
-
-            String[] loginOptions = { "Login", "Create an Account" };
-            String loginOption = (String) JOptionPane.showInputDialog(
-                    null,
-                    "Would you like to login or create an account?",
-                    "Login",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    loginOptions,
-                    loginOptions[0]);
-            if (loginOption == null) {
-                break;
-            }
-
-            writer.write(identification);
-            writer.println();
-            writer.flush();
-            writer.write(loginOption);
-            writer.println();
-            writer.flush();
-
-            String username = JOptionPane.showInputDialog(null, "Enter your username.", "Username",
-                    JOptionPane.QUESTION_MESSAGE);
-            if (username == null) {
-                break;
-            } else if (username.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Invalid username.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-                break;
-            }
-            String password = JOptionPane.showInputDialog(null, "Enter your password.", "Password",
-                    JOptionPane.QUESTION_MESSAGE);
-            if (password == null) {
-                break;
-            } else if (password.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Invalid password.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-                break;
-            }
-
-            writer.write(username.trim());
-            writer.println();
-            writer.flush();
-            writer.write(password.trim());
-            writer.println();
-            writer.flush();
 
             String loginSuccess = reader.readLine();
 
@@ -157,8 +309,230 @@ public class Client {
                                 }
                                 break;
                             case "Create a Quiz":
+                                int coursesInt = Integer.parseInt(reader.readLine());
+                                String[] courseChoices = new String[coursesInt];
+                                for (int i = 0; i < coursesInt; i++) {
+                                    courseChoices[i] = reader.readLine();
+                                }
+                                String courseOption = (String) JOptionPane.showInputDialog(
+                                        null, "In which course would you like to create this quiz?", "Course Choice",
+                                        JOptionPane.QUESTION_MESSAGE, null, courseChoices, courseChoices[0]);
+                                if (courseOption == null) {
+                                    writer.write("null");
+                                    writer.println();
+                                    writer.flush();
+                                    continueLoop = false;
+                                } else {
+                                    writer.write(courseOption);
+                                    writer.println();
+                                    writer.flush();
+                                    String quizTitle = JOptionPane.showInputDialog(null, "Enter the quiz title.", "Quiz Creation",
+                                        JOptionPane.QUESTION_MESSAGE);
+                                    if (quizTitle == null) {
+                                        writer.write("null");
+                                        writer.println();
+                                        writer.flush();
+                                        continueLoop = false;
+                                    } else {
+                                        writer.write(quizTitle);
+                                        writer.println();
+                                        writer.flush();
+                                        latch = new CountDownLatch(1);
+                                        quizGui();
+                                        latch.await();
+                                        String question = qG[0];
+                                        String correctAns = qG[1];
+                                        String ans2 = qG[2];
+                                        String ans3 = qG[3];
+                                        String ans4 = qG[4];
+                                        if (question == null || correctAns == null || ans2 == null || ans3 == null || ans4 == null) {
+                                            writer.println("null");
+                                            writer.println("null");
+                                            writer.println("null");
+                                            writer.println("null");
+                                            writer.println("null");
+                                            writer.flush();
+                                            continueLoop = false;
+                                        } else {
+                                            writer.println(question);
+                                            writer.println(correctAns);
+                                            writer.println(ans2);
+                                            writer.println(ans3);
+                                            writer.println(ans4);
+                                            writer.flush();
+                                            String[] yesNoOption = {"No", "Yes"};
+                                            String yN = (String) JOptionPane.showInputDialog(
+                                            null, "Would you like to make quiz questions randomized?", "Randomize Option",
+                                                JOptionPane.QUESTION_MESSAGE, null, yesNoOption, yesNoOption[0]);
+                                            if (yN == null) {
+                                                writer.write("null");
+                                                writer.println();
+                                                writer.flush();
+                                                continueLoop = false;
+                                            } else {
+                                                writer.write(yN);
+                                                writer.println();
+                                                writer.flush();
+                                                JOptionPane.showMessageDialog(null, "Successfully created quiz.", "Success",
+                                                    JOptionPane.INFORMATION_MESSAGE);
+                                                String yesOrNo = (String) JOptionPane.showInputDialog(
+                                            null, "Would you like to add another question?", "Add Question",
+                                                    JOptionPane.QUESTION_MESSAGE, null, yesNoOption, yesNoOption[0]);
+                                                if (yesOrNo == null) {
+                                                    writer.write("null");
+                                                    writer.println();
+                                                    writer.flush();
+                                                    continueLoop = false;
+                                                } else {
+                                                    writer.write(yesOrNo);
+                                                    writer.println();
+                                                    writer.flush();
+                                                    while (yesOrNo.equals("Yes")) {
+                                                        latch = new CountDownLatch(1);
+                                                        quizGui();
+                                                        latch.await();
+                                                        question = qG[0];
+                                                        correctAns = qG[1];
+                                                        ans2 = qG[2];
+                                                        ans3 = qG[3];
+                                                        ans4 = qG[4];
+                                                        if (question == null || correctAns == null || ans2 == null || ans3 == null || ans4 == null) {
+                                                            writer.println("null");
+                                                            writer.println("null");
+                                                            writer.println("null");
+                                                            writer.println("null");
+                                                            writer.println("null");
+                                                            writer.flush();
+                                                            continueLoop = false;
+                                                            yesOrNo = "No";
+                                                        } else {
+                                                            writer.println(question);
+                                                            writer.println(correctAns);
+                                                            writer.println(ans2);
+                                                            writer.println(ans3);
+                                                            writer.println(ans4);
+                                                            writer.flush();
+                                                            yesOrNo = (String) JOptionPane.showInputDialog(
+                                                                null, "Would you like to add another question?", "Add Question",
+                                                                JOptionPane.QUESTION_MESSAGE, null, yesNoOption, yesNoOption[0]);
+                                                            if (yesOrNo == null) {
+                                                                writer.write("null");
+                                                                writer.println();
+                                                                writer.flush();
+                                                                continueLoop = false;
+                                                            } else {
+                                                                writer.write(yesOrNo);
+                                                                writer.println();
+                                                                writer.flush(); 
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }     
+                                        }
+                                    }
+                                }
                                 break;
                             case "Edit a Quiz":
+                                int courseLLength = Integer.parseInt(reader.readLine());
+                                String[] courseL = new String[courseLLength];
+                                for (int i = 0; i < courseL.length; i++) {
+                                    courseL[i] = reader.readLine();
+                                }
+                                String courseC = (String) JOptionPane.showInputDialog(
+                                    null, "Which course would you like to enter?", "Course Selection",
+                                    JOptionPane.QUESTION_MESSAGE, null, courseL, courseL[0]);
+                                if (courseC == null) {
+                                    writer.write("null");
+                                    writer.println();
+                                    writer.flush();
+                                    continueLoop = false;
+                                } else {
+                                    writer.write(courseC);
+                                    writer.println();
+                                    writer.flush();
+                                    int quizzesLength = Integer.parseInt(reader.readLine());
+                                    String[] quizzesList = new String[quizzesLength];
+                                    for (int i = 0; i < quizzesList.length; i++) {
+                                        quizzesList[i] = reader.readLine();
+                                    }
+                                    String quizChoice = (String) JOptionPane.showInputDialog(
+                                        null, "Which quiz would you like to edit?", "Quiz Edit",
+                                        JOptionPane.QUESTION_MESSAGE, null, quizzesList, quizzesList[0]);
+                                    if (quizChoice == null) {
+                                        writer.write("null");
+                                        writer.println();
+                                        writer.flush();
+                                        continueLoop = false; 
+                                    } else {
+                                        writer.write(quizChoice);
+                                        writer.println();
+                                        writer.flush();
+                                        String[] editOptions = { "Add Question", "Delete Question" };
+                                        String editOption = (String) JOptionPane.showInputDialog(
+                                        null, "Would you like to add or delete a question?", "Quiz Edit",
+                                            JOptionPane.QUESTION_MESSAGE, null, editOptions, editOptions[0]);
+                                        if (editOption == null) {
+                                            writer.write("null");
+                                            writer.println();
+                                            writer.flush();
+                                            continueLoop = false; 
+                                        } else {
+                                            writer.write(editOption);
+                                            writer.println();
+                                            writer.flush();
+                                            if (editOption.equals("Delete Question")) {
+                                                int questionsLength = Integer.parseInt(reader.readLine());
+                                                String[] questionsList = new String[questionsLength];
+                                                for (int i = 0; i < questionsLength; i++) {
+                                                    questionsList[i] = reader.readLine();
+                                                }
+                                                String questionChoice = (String) JOptionPane.showInputDialog(
+                                                    null, "Which question would you like to delete?", "Quiz Edit",
+                                                    JOptionPane.QUESTION_MESSAGE, null, questionsList, questionsList[0]);
+                                                if (questionChoice == null) {
+                                                    writer.write("null");
+                                                    writer.println();
+                                                    writer.flush();
+                                                    continueLoop = false; 
+                                                } else {
+                                                    writer.write(questionChoice);
+                                                    writer.println();
+                                                    writer.flush();
+                                                    JOptionPane.showMessageDialog(null, "Successfully deleted question.", "Success",
+                                                        JOptionPane.INFORMATION_MESSAGE);
+                                                }
+                                            } else {
+                                                latch = new CountDownLatch(1);
+                                                quizGui();
+                                                latch.await();
+                                                String question = qG[0];
+                                                String correctAns = qG[1];
+                                                String ans2 = qG[2];
+                                                String ans3 = qG[3];
+                                                String ans4 = qG[4];
+                                                if (question == null || correctAns == null || ans2 == null || ans3 == null || ans4 == null) {
+                                                    writer.println("null");
+                                                    writer.println("null");
+                                                    writer.println("null");
+                                                    writer.println("null");
+                                                    writer.println("null");
+                                                    writer.flush();
+                                                    continueLoop = false;
+                                                } else {
+                                                    writer.println(question);
+                                                    writer.println(correctAns);
+                                                    writer.println(ans2);
+                                                    writer.println(ans3);
+                                                    writer.println(ans4);
+                                                    writer.flush();
+                                                    JOptionPane.showMessageDialog(null, "Successfully added question.", "Success",
+                                                        JOptionPane.INFORMATION_MESSAGE);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                                 break;
                             case "Delete a Quiz":
                                 int courseListLength = Integer.parseInt(reader.readLine());
@@ -546,4 +920,7 @@ public class Client {
         reader.close();
         socket.close();
     }
+
+    
+    
 }

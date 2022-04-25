@@ -1860,7 +1860,6 @@ public class Server extends Thread {
                     }
                 }
             }
-            socket.close();
             writer.close();
             reader.close();
         } catch (IOException e) {

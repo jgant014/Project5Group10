@@ -345,13 +345,19 @@ public class Client {
                                         String ans2 = qG[2];
                                         String ans3 = qG[3];
                                         String ans4 = qG[4];
-                                        if (question == null || correctAns == null || ans2 == null || ans3 == null || ans4 == null) {
+                                        if (question.trim().length() == 0 || 
+                                            correctAns.trim().length() == 0 ||
+                                            ans2.trim().length() == 0 ||
+                                            ans3.trim().length() == 0 ||
+                                            ans4.trim().length() == 0) {
                                             writer.println("null");
                                             writer.println("null");
                                             writer.println("null");
                                             writer.println("null");
                                             writer.println("null");
                                             writer.flush();
+                                            JOptionPane.showMessageDialog(null, "Invalid entry.", "Error",
+                                                        JOptionPane.ERROR_MESSAGE);
                                             continueLoop = false;
                                         } else {
                                             writer.println(question);
@@ -396,13 +402,19 @@ public class Client {
                                                         ans2 = qG[2];
                                                         ans3 = qG[3];
                                                         ans4 = qG[4];
-                                                        if (question == null || correctAns == null || ans2 == null || ans3 == null || ans4 == null) {
+                                                        if (question.trim().length() == 0 || 
+                                                        correctAns.trim().length() == 0 ||
+                                                        ans2.trim().length() == 0 ||
+                                                        ans3.trim().length() == 0 ||
+                                                        ans4.trim().length() == 0) {
                                                             writer.println("null");
                                                             writer.println("null");
                                                             writer.println("null");
                                                             writer.println("null");
                                                             writer.println("null");
                                                             writer.flush();
+                                                            JOptionPane.showMessageDialog(null, "Invalid entry.", "Error",
+                                                                JOptionPane.ERROR_MESSAGE);
                                                             continueLoop = false;
                                                             yesOrNo = "No";
                                                         } else {
@@ -511,13 +523,19 @@ public class Client {
                                                 String ans2 = qG[2];
                                                 String ans3 = qG[3];
                                                 String ans4 = qG[4];
-                                                if (question == null || correctAns == null || ans2 == null || ans3 == null || ans4 == null) {
+                                                if (question.trim().length() == 0 || 
+                                                correctAns.trim().length() == 0 ||
+                                                ans2.trim().length() == 0 ||
+                                                ans3.trim().length() == 0 ||
+                                                ans4.trim().length() == 0) {
                                                     writer.println("null");
                                                     writer.println("null");
                                                     writer.println("null");
                                                     writer.println("null");
                                                     writer.println("null");
                                                     writer.flush();
+                                                    JOptionPane.showMessageDialog(null, "Invalid entry.", "Error",
+                                                        JOptionPane.ERROR_MESSAGE);
                                                     continueLoop = false;
                                                 } else {
                                                     writer.println(question);

@@ -46,7 +46,8 @@ public class Client {
 
     public static void quizGui() {
         frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setUndecorated(true);
+        frame.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
         frame.setSize(800,600);
         frame.setTitle("Add Question");
         frame.setLocationRelativeTo(null);
@@ -279,6 +280,12 @@ public class Client {
                                 writer.write(courseName);
                                 writer.println();
                                 writer.flush();
+                                String duplicated = reader.readLine();
+                                if (duplicated.equals("duplicate")) {
+                                    JOptionPane.showMessageDialog(null, "Course already exists.", "Error",
+                                            JOptionPane.ERROR_MESSAGE);
+                                    break;
+                                }
                                 String addCourseSuccess = reader.readLine();
                                 if (addCourseSuccess.equals("true")) {
                                     JOptionPane.showMessageDialog(null, "Successfully added course.", "Success",
@@ -351,6 +358,12 @@ public class Client {
                                         writer.write(quizTitle);
                                         writer.println();
                                         writer.flush();
+                                        String duplicate = reader.readLine();
+                                        if (duplicate.equals("duplicate")) {
+                                            JOptionPane.showMessageDialog(null, "Quiz already exists.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                            break;
+                                        }
                                         latch = new CountDownLatch(1);
                                         quizGui();
                                         latch.await();
@@ -545,6 +558,10 @@ public class Client {
                                                 latch = new CountDownLatch(1);
                                                 quizGui();
                                                 latch.await();
+                                                if (qG.length == 0) {
+                                                    continueLoop = false;
+                                                    break;
+                                                }
                                                 String question = qG[0];
                                                 String correctAns = qG[1];
                                                 String ans2 = qG[2];

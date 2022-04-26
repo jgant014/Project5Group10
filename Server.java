@@ -1358,6 +1358,23 @@ public class Server extends Thread {
                                 switch (teacherOption) {
                                     case "Add Course":
                                         String courseName = reader.readLine();
+                                        String[] allCourses = getCourses();
+                                        Boolean duplicated = false;
+                                        for (int i = 0; i < allCourses.length; i++) {
+                                            if (courseName.equals(allCourses[i])) {
+                                                writer.write("duplicate");
+                                                writer.println();
+                                                writer.flush();
+                                                duplicated = true;
+                                                break;
+                                            }
+                                        }
+                                        if (duplicated) {
+                                            break;
+                                        }
+                                        writer.write("success");
+                                        writer.println();
+                                        writer.flush();
                                         String addCourseSuccess;
                                         if (!courseName.equals("null")) {
                                             addCourseSuccess = addCourse(courseName);
@@ -1407,6 +1424,23 @@ public class Server extends Thread {
                                         String coursesChoice = reader.readLine();
                                         if (!coursesChoice.equals("null")) {
                                             String quizTitle = reader.readLine();
+                                            String[] quizzesList = getQuizList(coursesChoice);
+                                            Boolean duplicate = false;
+                                            for (int i = 0; i <  quizzesList.length; i++) {
+                                                if (quizTitle.equals(quizzesList[i])) {
+                                                    writer.write("duplicate");
+                                                    writer.println();
+                                                    writer.flush();
+                                                    duplicate = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (duplicate) {
+                                                break;
+                                            }
+                                            writer.write("success");
+                                            writer.println();
+                                            writer.flush();
                                             if (!quizTitle.equals("null")) {
                                                 String question = reader.readLine();
                                                 String correctAns = reader.readLine();

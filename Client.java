@@ -288,6 +288,11 @@ public class Client {
                                 break;
                             case "Delete a Course":
                                 int coursesLength = Integer.parseInt(reader.readLine());
+                                if (coursesLength == 0) {
+                                    JOptionPane.showMessageDialog(null, "No available courses.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                    break;
+                                }
                                 String[] courses = new String[coursesLength];
                                 for (int i = 0; i < coursesLength; i++) {
                                     courses[i] = reader.readLine();
@@ -310,6 +315,11 @@ public class Client {
                                 break;
                             case "Create a Quiz":
                                 int coursesInt = Integer.parseInt(reader.readLine());
+                                if (coursesInt == 0) {
+                                    JOptionPane.showMessageDialog(null, "No available courses.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                    break;
+                                }
                                 String[] courseChoices = new String[coursesInt];
                                 for (int i = 0; i < coursesInt; i++) {
                                     courseChoices[i] = reader.readLine();
@@ -358,7 +368,6 @@ public class Client {
                                             writer.flush();
                                             JOptionPane.showMessageDialog(null, "Invalid entry.", "Error",
                                                         JOptionPane.ERROR_MESSAGE);
-                                            continueLoop = false;
                                         } else {
                                             writer.println(question);
                                             writer.println(correctAns);
@@ -415,7 +424,6 @@ public class Client {
                                                             writer.flush();
                                                             JOptionPane.showMessageDialog(null, "Invalid entry.", "Error",
                                                                 JOptionPane.ERROR_MESSAGE);
-                                                            continueLoop = false;
                                                             yesOrNo = "No";
                                                         } else {
                                                             writer.println(question);
@@ -447,6 +455,11 @@ public class Client {
                                 break;
                             case "Edit a Quiz":
                                 int courseLLength = Integer.parseInt(reader.readLine());
+                                if (courseLLength == 0) {
+                                    JOptionPane.showMessageDialog(null, "No available courses.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                    break;
+                                }
                                 String[] courseL = new String[courseLLength];
                                 for (int i = 0; i < courseL.length; i++) {
                                     courseL[i] = reader.readLine();
@@ -464,6 +477,11 @@ public class Client {
                                     writer.println();
                                     writer.flush();
                                     int quizzesLength = Integer.parseInt(reader.readLine());
+                                    if (quizzesLength == 0) {
+                                        JOptionPane.showMessageDialog(null, "No available quizzes.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                        break;
+                                    }
                                     String[] quizzesList = new String[quizzesLength];
                                     for (int i = 0; i < quizzesList.length; i++) {
                                         quizzesList[i] = reader.readLine();
@@ -495,6 +513,11 @@ public class Client {
                                             writer.flush();
                                             if (editOption.equals("Delete Question")) {
                                                 int questionsLength = Integer.parseInt(reader.readLine());
+                                                if (questionsLength == 0) {
+                                                    JOptionPane.showMessageDialog(null, "No available questions.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                                    break;
+                                                }
                                                 String[] questionsList = new String[questionsLength];
                                                 for (int i = 0; i < questionsLength; i++) {
                                                     questionsList[i] = reader.readLine();
@@ -536,7 +559,6 @@ public class Client {
                                                     writer.flush();
                                                     JOptionPane.showMessageDialog(null, "Invalid entry.", "Error",
                                                         JOptionPane.ERROR_MESSAGE);
-                                                    continueLoop = false;
                                                 } else {
                                                     writer.println(question);
                                                     writer.println(correctAns);
@@ -554,6 +576,11 @@ public class Client {
                                 break;
                             case "Delete a Quiz":
                                 int courseListLength = Integer.parseInt(reader.readLine());
+                                if (courseListLength == 0) {
+                                    JOptionPane.showMessageDialog(null, "No available courses.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                    break;
+                                }
                                 String[] courseList = new String[courseListLength];
                                 for (int i = 0; i < courseList.length; i++) {
                                     courseList[i] = reader.readLine();
@@ -571,6 +598,11 @@ public class Client {
                                     writer.println();
                                     writer.flush();
                                     int quizzesLength = Integer.parseInt(reader.readLine());
+                                    if (quizzesLength == 0) {
+                                        JOptionPane.showMessageDialog(null, "No available quizzes.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                        break;
+                                    }
                                     String[] quizzesList = new String[quizzesLength];
                                     for (int i = 0; i < quizzesList.length; i++) {
                                         quizzesList[i] = reader.readLine();
@@ -592,6 +624,11 @@ public class Client {
                                 break;
                             case "Upload a Quiz":
                                 int coursesOptionsLength = Integer.parseInt(reader.readLine());
+                                if (coursesOptionsLength == 0) {
+                                    JOptionPane.showMessageDialog(null, "No available courses.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                    break;
+                                }
                                 String[] coursesOptions = new String[coursesOptionsLength];
                                 for (int i = 0; i < coursesOptions.length; i++) {
                                     coursesOptions[i] = reader.readLine();
@@ -645,6 +682,11 @@ public class Client {
                                 break;
                             case "View Scores":
                                 int studentListLength = Integer.parseInt(reader.readLine());
+                                if (studentListLength == 0) {
+                                    JOptionPane.showMessageDialog(null, "No available students.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                    break;
+                                }
                                 String[] studentList = new String[studentListLength];
                                 for (int i = 0; i < studentListLength; i++) {
                                     studentList[i] = reader.readLine();
@@ -662,6 +704,11 @@ public class Client {
                                     writer.println();
                                     writer.flush();
                                     int studentQuizzesLength = Integer.parseInt(reader.readLine());
+                                    if (studentQuizzesLength == 0) {
+                                        JOptionPane.showMessageDialog(null, "No available quiz attempts.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                        break;
+                                    }
                                     String[] studentQuizzes = new String[studentQuizzesLength];
                                     for (int i = 0; i < studentQuizzes.length; i++) {
                                         studentQuizzes[i] = reader.readLine();
@@ -762,6 +809,11 @@ public class Client {
                         switch (studentOption) {
                             case "Take a Quiz":
                                 int coursesLength = Integer.parseInt(reader.readLine());
+                                if (coursesLength == 0) {
+                                    JOptionPane.showMessageDialog(null, "No available courses.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                    break;
+                                }
                                 String[] courses = new String[coursesLength];
                                 for (int i = 0; i < coursesLength; i++) {
                                     courses[i] = reader.readLine();
@@ -779,6 +831,11 @@ public class Client {
                                     writer.println();
                                     writer.flush();
                                     int quizzesLength = Integer.parseInt(reader.readLine());
+                                    if (quizzesLength == 0) {
+                                        JOptionPane.showMessageDialog(null, "No available quizzes.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                        break;
+                                    }
                                     String[] quizzes = new String[coursesLength];
                                     for (int i = 0; i < quizzesLength; i++) {
                                         quizzes[i] = reader.readLine();
@@ -847,6 +904,11 @@ public class Client {
                                 break;
                             case "View Scores":
                                 int quizAttemptsLength = Integer.parseInt(reader.readLine());
+                                if (quizAttemptsLength == 0) {
+                                    JOptionPane.showMessageDialog(null, "No available quiz attempts.", "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                                    break;
+                                }
                                 String[] quizAttempts = new String[quizAttemptsLength];
                                 for (int i = 0; i < quizAttemptsLength; i++) {
                                     quizAttempts[i] = reader.readLine();

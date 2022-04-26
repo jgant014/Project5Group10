@@ -1312,6 +1312,7 @@ public class Server extends Thread {
             String username = "";
             String password = "";
 
+            
             identification = reader.readLine();
             if (identification.equals("null")) {
             } else {
@@ -1374,6 +1375,9 @@ public class Server extends Thread {
                                         writer.write(coursesLength);
                                         writer.println();
                                         writer.flush();
+                                        if (Integer.parseInt(coursesLength) == 0) {
+                                            break;
+                                        }
                                         for (int i = 0; i < courses.length; i++) {
                                             writer.write(courses[i]);
                                             writer.println();
@@ -1392,6 +1396,9 @@ public class Server extends Thread {
                                         writer.write(coursesListLength);
                                         writer.println();
                                         writer.flush();
+                                        if (Integer.parseInt(coursesListLength) == 0) {
+                                            break;
+                                        }
                                         for (int i = 0; i < coursesList.length; i++) {
                                             writer.write(coursesList[i]);
                                             writer.println();
@@ -1443,14 +1450,13 @@ public class Server extends Thread {
                                                                 }
                                                             } else {
                                                                 keepAdding = "No";
-                                                                continueLoop = false;
                                                             }
                                                         }
                                                     } else {
                                                         continueLoop = false;
                                                     }
                                                 } else {
-                                                    continueLoop = false;
+                                                    
                                                 }
                                             } else {
                                                 continueLoop = false;
@@ -1465,6 +1471,9 @@ public class Server extends Thread {
                                         writer.write(coursesLen);
                                         writer.println();
                                         writer.flush();
+                                        if (Integer.parseInt(coursesLen) == 0) {
+                                            break;
+                                        }
                                         for (int i = 0; i < coursesL.length; i++) {
                                             writer.write(coursesL[i]);
                                             writer.println();
@@ -1477,6 +1486,9 @@ public class Server extends Thread {
                                             writer.write(quizzesLength);
                                             writer.println();
                                             writer.flush();
+                                            if (Integer.parseInt(quizzesLength) == 0) {
+                                                break;
+                                            }
                                             for (int i = 0; i < quizzes.length; i++) {
                                                 writer.write(quizzes[i]);
                                                 writer.println();
@@ -1494,7 +1506,6 @@ public class Server extends Thread {
                                                     if (!question.equals("null")) {
                                                         addQuestion(courChoice, quizChoice, question, correctAns, ans2, ans3, ans4);
                                                     } else {
-                                                        continueLoop = false;
                                                     }
                                                 } else if (editOption.equals("Delete Question")) {
                                                     String[] questions = getQuizQuestions(courChoice + "@" + quizChoice + ".txt");
@@ -1502,6 +1513,9 @@ public class Server extends Thread {
                                                     writer.write(questionsLength);
                                                     writer.println();
                                                     writer.flush();
+                                                    if (Integer.parseInt(questionsLength) == 0) {
+                                                        break;
+                                                    }
                                                     for (int i = 0; i < questions.length; i++) {
                                                         writer.write(questions[i]);
                                                         writer.println();
@@ -1530,6 +1544,9 @@ public class Server extends Thread {
                                         writer.write(courseListLength);
                                         writer.println();
                                         writer.flush();
+                                        if (Integer.parseInt(courseListLength) == 0) {
+                                            break;
+                                        }
                                         for (int i = 0; i < courseList.length; i++) {
                                             writer.write(courseList[i]);
                                             writer.println();
@@ -1542,6 +1559,9 @@ public class Server extends Thread {
                                             writer.write(quizzesLength);
                                             writer.println();
                                             writer.flush();
+                                            if (Integer.parseInt(quizzesLength) == 0) {
+                                                break;
+                                            }
                                             for (int i = 0; i < quizzes.length; i++) {
                                                 writer.write(quizzes[i]);
                                                 writer.println();
@@ -1563,6 +1583,9 @@ public class Server extends Thread {
                                         writer.write(coursesOptionsLength);
                                         writer.println();
                                         writer.flush();
+                                        if (Integer.parseInt(coursesOptionsLength) == 0) {
+                                            break;
+                                        }
                                         for (int i = 0; i < coursesOptions.length; i++) {
                                             writer.write(coursesOptions[i]);
                                             writer.println();
@@ -1602,9 +1625,13 @@ public class Server extends Thread {
                                     case "View Scores":
                                         String[] studentList = getStudentUsernames();
                                         String studentListLength = String.valueOf(studentList.length);
+                                        
                                         writer.write(studentListLength);
                                         writer.println();
                                         writer.flush();
+                                        if (Integer.parseInt(studentListLength) == 0) {
+                                            break;
+                                        }
                                         for (int i = 0; i < studentList.length; i++) {
                                             writer.write(studentList[i]);
                                             writer.println();
@@ -1617,6 +1644,9 @@ public class Server extends Thread {
                                             writer.write(studentQuizzesLength);
                                             writer.println();
                                             writer.flush();
+                                            if (Integer.parseInt(studentQuizzesLength) == 0) {
+                                                break;
+                                            }
                                             for (int i = 0; i < studentQuizzes.length; i++) {
                                                 writer.write(studentQuizzes[i]);
                                                 writer.println();
@@ -1682,6 +1712,9 @@ public class Server extends Thread {
                                         writer.write(coursesLength);
                                         writer.println();
                                         writer.flush();
+                                        if (Integer.parseInt(coursesLength) == 0) {
+                                            break;
+                                        }
                                         for (int i = 0; i < courses.length; i++) {
                                             writer.write(courses[i]);
                                             writer.println();
@@ -1694,6 +1727,9 @@ public class Server extends Thread {
                                             writer.write(quizzesLength);
                                             writer.println();
                                             writer.flush();
+                                            if (Integer.parseInt(quizzesLength) == 0) {
+                                                break;
+                                            }
                                             for (int i = 0; i < quizzes.length; i++) {
                                                 writer.write(quizzes[i]);
                                                 writer.println();
@@ -1807,6 +1843,9 @@ public class Server extends Thread {
                                         writer.write(quizAttemptsLength);
                                         writer.println();
                                         writer.flush();
+                                        if (Integer.parseInt(quizAttemptsLength) == 0) {
+                                            break;
+                                        }
                                         for (int i = 0; i < quizAttempts.length; i++) {
                                             writer.write(quizAttempts[i]);
                                             writer.println();

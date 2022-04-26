@@ -259,6 +259,10 @@ public class Client {
                                 null, "What would you like to do?", "Actions",
                                 JOptionPane.QUESTION_MESSAGE, null, teacherOptions, teacherOptions[0]);
                         if (teacherOption == null) {
+                            writer.write("null");
+                            writer.println();
+                            writer.flush();
+                            continueLoop = false;
                             break;
                         }
                         writer.write(teacherOption);
@@ -801,6 +805,10 @@ public class Client {
                                 null, "What would you like to do?", "Actions",
                                 JOptionPane.QUESTION_MESSAGE, null, studentOptions, studentOptions[0]);
                         if (studentOption == null) {
+                            writer.write("null");
+                            writer.println();
+                            writer.flush();
+                            continueLoop = false;
                             break;
                         }
                         writer.write(studentOption);

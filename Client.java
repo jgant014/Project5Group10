@@ -961,7 +961,7 @@ public class Client {
                                                 JOptionPane.ERROR_MESSAGE);
                                         break;
                                     }
-                                    String[] quizzes = new String[coursesLength];
+                                    String[] quizzes = new String[quizzesLength];
                                     for (int i = 0; i < quizzesLength; i++) {
                                         quizzes[i] = reader.readLine();
                                     }

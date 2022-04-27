@@ -997,8 +997,19 @@ public class Client {
                                             ArrayList<String> allStudentAnswers = new ArrayList<String>();
                                             ArrayList<String> allCorrectAnswers = new ArrayList<String>();
                                             ArrayList<String> allQuestions = new ArrayList<String>();
+                                            ArrayList<String> answerA = new ArrayList<String>();
+                                            ArrayList<String> answerB = new ArrayList<String>();
+                                            ArrayList<String> answerC = new ArrayList<String>();
+                                            ArrayList<String> answerD = new ArrayList<String>();
                                             for (int i = 1; i < quizListLength; i += 6) {
                                                 allQuestions.add(quizList[i]);
+                                                String[] options = { quizList[i + 1], quizList[i + 2],
+                                                    quizList[i + 3], quizList[i + 4] };
+                                                    options = shuffleAnswerChoice(options);
+                                                answerA.add(options[0]);
+                                                answerB.add(options[1]);
+                                                answerC.add(options[2]);
+                                                answerD.add(options[3]);
                                                 allCorrectAnswers.add(quizList[i + 5]);
                                             }
                                             JOptionPane.showMessageDialog(null,
@@ -1007,7 +1018,11 @@ public class Client {
                                                     JOptionPane.INFORMATION_MESSAGE);
                                             for (int i = 0; i < allQuestions.size(); i++) {
                                                 String title = String.format("%s: Question %d", quizName, i + 1);
-                                                JOptionPane.showMessageDialog(null, allQuestions.get(i), title,
+                                                JOptionPane.showMessageDialog(null, allQuestions.get(i) + 
+                                                "\nA: " + answerA.get(i) + 
+                                                "\nB: " + answerB.get(i) + 
+                                                "\nC: " + answerC.get(i) + 
+                                                "\nD: " + answerD.get(i), title,
                                                         JOptionPane.INFORMATION_MESSAGE);
                                             }
                                             String filename = JOptionPane.showInputDialog(null,

@@ -898,6 +898,32 @@ public class Server extends Thread {
         return questions;
     }
 
+    public static String[] getQuizQuestionsProgressFile(String progressfile) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            File file = new File(progressfile);
+            file.createNewFile();
+            FileReader fr = new FileReader(file);
+            BufferedReader bfr = new BufferedReader(fr);
+            String line = bfr.readLine();
+            while (line != null) {
+                list.add(line);
+                line = bfr.readLine();
+            }
+            bfr.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String[] questions = new String[list.size() - 3];
+        for (int i = 1; i < list.size() - 2; i++) {
+            questions[i - 1] = list.get(i);
+        }
+        return questions;
+    }
+
     public static void deleteQuestion(String quizfile, int questionNum) {
         ArrayList<String> list = new ArrayList<>();
         try {
@@ -1312,7 +1338,6 @@ public class Server extends Thread {
             String username = "";
             String password = "";
 
-            
             identification = reader.readLine();
             if (identification.equals("null")) {
             } else {
@@ -1426,7 +1451,7 @@ public class Server extends Thread {
                                             String quizTitle = reader.readLine();
                                             String[] quizzesList = getQuizList(coursesChoice);
                                             Boolean duplicate = false;
-                                            for (int i = 0; i <  quizzesList.length; i++) {
+                                            for (int i = 0; i < quizzesList.length; i++) {
                                                 if (quizTitle.equals(quizzesList[i])) {
                                                     writer.write("duplicate");
                                                     writer.println();
@@ -1452,7 +1477,8 @@ public class Server extends Thread {
                                                     if (!randomized.equals("null")) {
                                                         String inputFileName;
                                                         if (randomized.equals("Yes")) {
-                                                            inputFileName = createQuiz(coursesChoice, quizTitle + " Random",
+                                                            inputFileName = createQuiz(coursesChoice,
+                                                                    quizTitle + " Random",
                                                                     question, correctAns, ans2, ans3, ans4);
                                                             addQuizToCourse(quizTitle + " Random", coursesChoice);
                                                         } else {
@@ -1472,12 +1498,13 @@ public class Server extends Thread {
                                                             ans4 = reader.readLine();
                                                             if (!question.equals("null")) {
                                                                 if (randomized.equals("Yes")) {
-                                                                    addQuestion(coursesChoice, quizTitle + " Random", question,
-                                                                        correctAns, ans2, ans3, ans4);
+                                                                    addQuestion(coursesChoice, quizTitle + " Random",
+                                                                            question,
+                                                                            correctAns, ans2, ans3, ans4);
                                                                 } else if (randomized.equals("No")) {
                                                                     addQuestion(coursesChoice, quizTitle, question,
-                                                                        correctAns, ans2, ans3, ans4);
-                                                                }        
+                                                                            correctAns, ans2, ans3, ans4);
+                                                                }
                                                                 keepAdding = reader.readLine();
                                                                 if (keepAdding.equals("null")) {
                                                                     continueLoop = false;
@@ -1490,7 +1517,7 @@ public class Server extends Thread {
                                                         continueLoop = false;
                                                     }
                                                 } else {
-                                                    
+
                                                 }
                                             } else {
                                                 continueLoop = false;
@@ -1538,11 +1565,13 @@ public class Server extends Thread {
                                                     String ans3 = reader.readLine();
                                                     String ans4 = reader.readLine();
                                                     if (!question.equals("null")) {
-                                                        addQuestion(courChoice, quizChoice, question, correctAns, ans2, ans3, ans4);
+                                                        addQuestion(courChoice, quizChoice, question, correctAns, ans2,
+                                                                ans3, ans4);
                                                     } else {
                                                     }
                                                 } else if (editOption.equals("Delete Question")) {
-                                                    String[] questions = getQuizQuestions(courChoice + "@" + quizChoice + ".txt");
+                                                    String[] questions = getQuizQuestions(
+                                                            courChoice + "@" + quizChoice + ".txt");
                                                     String questionsLength = String.valueOf(questions.length);
                                                     writer.write(questionsLength);
                                                     writer.println();
@@ -1557,14 +1586,16 @@ public class Server extends Thread {
                                                     }
                                                     String questionChoice = reader.readLine();
                                                     if (!questionChoice.equals("null")) {
-                                                        int questionNum = Integer.parseInt(questionChoice.substring(0, questionChoice.indexOf(".")));
-                                                        deleteQuestion(courChoice + "@" + quizChoice + ".txt", questionNum);
+                                                        int questionNum = Integer.parseInt(questionChoice.substring(0,
+                                                                questionChoice.indexOf(".")));
+                                                        deleteQuestion(courChoice + "@" + quizChoice + ".txt",
+                                                                questionNum);
                                                     } else {
                                                         continueLoop = false;
                                                     }
                                                 } else {
                                                     continueLoop = false;
-                                                } 
+                                                }
                                             } else {
                                                 continueLoop = false;
                                             }
@@ -1659,7 +1690,7 @@ public class Server extends Thread {
                                     case "View Scores":
                                         String[] studentList = getStudentUsernames();
                                         String studentListLength = String.valueOf(studentList.length);
-                                        
+
                                         writer.write(studentListLength);
                                         writer.println();
                                         writer.flush();
@@ -1696,6 +1727,22 @@ public class Server extends Thread {
                                                 writer.write(timestamp);
                                                 writer.println();
                                                 writer.flush();
+                                                String yN = reader.readLine();
+                                                if (yN.equals("null")) {
+                                                    continueLoop = false;
+                                                } else if (yN.equals("No")) {
+                                                } else {
+                                                    String[] quizQuestions = getQuizQuestionsProgressFile(quizOption);
+                                                    String quizQuestionsLength = String.valueOf(quizQuestions.length);
+                                                    writer.write(quizQuestionsLength);
+                                                    writer.println();
+                                                    writer.flush();
+                                                    for (int i = 0; i < quizQuestions.length; i++) {
+                                                        writer.write(quizQuestions[i]);
+                                                        writer.println();
+                                                        writer.flush();
+                                                    }
+                                                }
                                             } else {
                                                 continueLoop = false;
                                             }
@@ -1793,6 +1840,7 @@ public class Server extends Thread {
                                                         writer.println();
                                                         writer.flush();
                                                     }
+                                                    boolean complete = true;
                                                     for (int i = 0; i < ((quizList.length - 1) / 6); i++) {
                                                         String quizName = quizList[0];
                                                         String answerChoice = reader.readLine();
@@ -1808,13 +1856,17 @@ public class Server extends Thread {
                                                             }
                                                             writeToProgressFile(quizProgressFilename, quizName,
                                                                     questionStatement, correct);
+                                                        } else {
+                                                            complete = false;
+                                                            break;
                                                         }
                                                     }
-                                                    addAttempt(username, courseOption, quizOption,
-                                                            getAttempt(username, courseOption, quizOption));
-                                                    timeStampQuiz(quizProgressFilename);
-                                                    gradeQuiz(quizProgressFilename);
-
+                                                    if (complete) {
+                                                        addAttempt(username, courseOption, quizOption,
+                                                                getAttempt(username, courseOption, quizOption));
+                                                        timeStampQuiz(quizProgressFilename);
+                                                        gradeQuiz(quizProgressFilename);
+                                                    }
                                                 } else {
                                                     String quizProgressFilename = username + "@" + courseOption +
                                                             "@" + quizOption + "@" +
@@ -1895,6 +1947,23 @@ public class Server extends Thread {
                                             writer.write(timestamp);
                                             writer.println();
                                             writer.flush();
+                                            String yN = reader.readLine();
+                                            if (yN.equals("null")) {
+                                                continueLoop = false;
+                                            } else if (yN.equals("No")) {
+                                            } else {
+                                                String[] quizQuestions = getQuizQuestionsProgressFile(
+                                                        quizAttemptChoice);
+                                                String quizQuestionsLength = String.valueOf(quizQuestions.length);
+                                                writer.write(quizQuestionsLength);
+                                                writer.println();
+                                                writer.flush();
+                                                for (int i = 0; i < quizQuestions.length; i++) {
+                                                    writer.write(quizQuestions[i]);
+                                                    writer.println();
+                                                    writer.flush();
+                                                }
+                                            }
                                         } else {
                                             continueLoop = false;
                                         }

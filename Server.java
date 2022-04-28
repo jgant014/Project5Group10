@@ -814,11 +814,7 @@ public class Server extends Thread {
             e.printStackTrace();
         }
         int length = list.size();
-        if ((length - 1) % 6 == 0 && length >= 7) {
-            return true;
-        } else {
-            return false;
-        }
+        return ((length - 1) % 6 == 0 && length >= 7);
     }
 
     // Writes quiz to quiz file and returns quiz title
@@ -1085,11 +1081,7 @@ public class Server extends Thread {
     // Returns true if quiz is a random quiz
     // Returns false if quiz is not a random quiz
     public static boolean isRandom(String quizOption) {
-        if (quizOption.indexOf("Random") != -1) {
-            return true;
-        } else {
-            return false;
-        }
+        return (quizOption.indexOf("Random") != -1);
     }
 
     public synchronized static void changeTeacherPassword(String username, String password, String newPassword) {
@@ -1575,7 +1567,8 @@ public class Server extends Thread {
                                                     String ans3 = reader.readLine();
                                                     String ans4 = reader.readLine();
                                                     if (!question.equals("null")) {
-                                                        addQuestion(courChoice, quizChoice, question, correctAns, ans2,
+                                                        addQuestion(courChoice, quizChoice, 
+                                                            question, correctAns, ans2,
                                                             ans3, ans4);
                                                     } else {
                                                     }
@@ -1856,7 +1849,8 @@ public class Server extends Thread {
                                                         String answerChoice = reader.readLine();
                                                         String correctAnswer = reader.readLine();
                                                         String questionStatement = reader.readLine();
-                                                        if (!inProgress.equals("null") && !correctAnswer.equals("null")
+                                                        if (!inProgress.equals("null") 
+                                                                && !correctAnswer.equals("null")
                                                                 && !questionStatement.equals("null")) {
                                                             boolean correct;
                                                             if (answerChoice.equals(correctAnswer)) {
@@ -1903,7 +1897,8 @@ public class Server extends Thread {
                                                         String answerChoice = reader.readLine();
                                                         String correctAnswer = reader.readLine();
                                                         String questionStatement = reader.readLine();
-                                                        if (!inProgress.equals("null") && !correctAnswer.equals("null")
+                                                        if (!inProgress.equals("null") 
+                                                                && !correctAnswer.equals("null")
                                                                 && !questionStatement.equals("null")) {
                                                             boolean correct;
                                                             if (answerChoice.equals(correctAnswer)) {

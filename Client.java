@@ -22,11 +22,11 @@ import java.util.ArrayList;
 
 public class Client {
 
-    static JTextField tf_question;
-    static JTextField tf_correctOption;
-    static JTextField tf_option2;
-    static JTextField tf_option3;
-    static JTextField tf_option4;
+    static JTextField tfQuestion;
+    static JTextField tfCorrectOption;
+    static JTextField tfOption2;
+    static JTextField tfOption3;
+    static JTextField tfOption4;
     static JLabel question;
     static JLabel title;
     static JLabel correctOption;
@@ -130,11 +130,11 @@ public class Client {
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource() == btn) {
                     try {
-                        qG[0] = tf_question.getText();
-                        qG[1] = tf_correctOption.getText();
-                        qG[2] = tf_option2.getText();
-                        qG[3] = tf_option3.getText();
-                        qG[4] = tf_option4.getText();
+                        qG[0] = tfQuestion.getText();
+                        qG[1] = tfCorrectOption.getText();
+                        qG[2] = tfOption2.getText();
+                        qG[3] = tfOption3.getText();
+                        qG[4] = tfOption4.getText();
                         latch.countDown();
                         frame.dispose();
                     } catch (NumberFormatException ex) {
@@ -164,33 +164,33 @@ public class Client {
         options4.setFont(new Font("Arial", Font.BOLD, 18));
         options4.setBorder(new EmptyBorder(0, 10, 0, 0));
 
-        tf_question = new JTextField(40);
-        tf_question.setFont(new Font("Arial", Font.BOLD, 16));
-        tf_question.setBounds(300, 130, 300, 50);
+        tfQuestion = new JTextField(40);
+        tfQuestion.setFont(new Font("Arial", Font.BOLD, 16));
+        tfQuestion.setBounds(300, 130, 300, 50);
 
-        tf_correctOption = new JTextField(40);
-        tf_correctOption.setFont(new Font("Arial", Font.BOLD, 16));
-        tf_correctOption.setBounds(300, 180, 300, 50);
+        tfCorrectOption = new JTextField(40);
+        tfCorrectOption.setFont(new Font("Arial", Font.BOLD, 16));
+        tfCorrectOption.setBounds(300, 180, 300, 50);
 
-        tf_option2 = new JTextField(40);
-        tf_option2.setFont(new Font("Arial", Font.BOLD, 16));
-        tf_option2.setBounds(300, 230, 300, 50);
+        tfOption2 = new JTextField(40);
+        tfOption2.setFont(new Font("Arial", Font.BOLD, 16));
+        tfOption2.setBounds(300, 230, 300, 50);
 
-        tf_option3 = new JTextField(40);
-        tf_option3.setFont(new Font("Arial", Font.BOLD, 16));
-        tf_option3.setBounds(300, 280, 300, 50);
+        tfOption3 = new JTextField(40);
+        tfOption3.setFont(new Font("Arial", Font.BOLD, 16));
+        tfOption3.setBounds(300, 280, 300, 50);
 
-        tf_option4 = new JTextField(40);
-        tf_option4.setFont(new Font("Arial", Font.BOLD, 16));
-        tf_option4.setBounds(300, 330, 300, 50);
+        tfOption4 = new JTextField(40);
+        tfOption4.setFont(new Font("Arial", Font.BOLD, 16));
+        tfOption4.setBounds(300, 330, 300, 50);
 
         frame.add(title);
         frame.add(question);
-        frame.add(tf_question);
-        frame.add(tf_correctOption);
-        frame.add(tf_option2);
-        frame.add(tf_option3);
-        frame.add(tf_option4);
+        frame.add(tfQuestion);
+        frame.add(tfCorrectOption);
+        frame.add(tfOption2);
+        frame.add(tfOption3);
+        frame.add(tfOption4);
         frame.add(btn);
         frame.add(correctOption);
         frame.add(options2);
@@ -653,7 +653,8 @@ public class Client {
                                                     writer.println(ans3);
                                                     writer.println(ans4);
                                                     writer.flush();
-                                                    JOptionPane.showMessageDialog(null, "Successfully added question.",
+                                                    JOptionPane.showMessageDialog(null, 
+                                                        "Successfully added question.",
                                                         "Success",
                                                         JOptionPane.INFORMATION_MESSAGE);
                                                 }
@@ -735,7 +736,8 @@ public class Client {
                                     writer.write(coursesOption);
                                     writer.println();
                                     writer.flush();
-                                    String inputFilename = JOptionPane.showInputDialog(null, "Enter a valid file path.",
+                                    String inputFilename = JOptionPane.showInputDialog(null, 
+                                        "Enter a valid file path.",
                                         "File Upload",
                                         JOptionPane.QUESTION_MESSAGE);
                                     if (inputFilename == null) {
@@ -892,7 +894,8 @@ public class Client {
                                             writer.write(newPassword.trim());
                                             writer.println();
                                             writer.flush();
-                                            JOptionPane.showMessageDialog(null, "Password has been changed.", "Success",
+                                            JOptionPane.showMessageDialog(null, 
+                                                "Password has been changed.", "Success",
                                                 JOptionPane.INFORMATION_MESSAGE);
                                         }
                                     }
@@ -912,7 +915,8 @@ public class Client {
                                     writer.println();
                                     writer.flush();
                                     if (yesNoChoice.equals("Yes")) {
-                                        JOptionPane.showMessageDialog(null, "Account Deleted.\nLogging out.", "Success",
+                                        JOptionPane.showMessageDialog(null, 
+                                            "Account Deleted.\nLogging out.", "Success",
                                             JOptionPane.INFORMATION_MESSAGE);
                                         continueLoop = false;
                                     }
@@ -1023,7 +1027,8 @@ public class Client {
                                                 allCorrectAnswers.add(quizList[i + 5]);
                                             }
                                             JOptionPane.showMessageDialog(null,
-                                                "Each question of the quiz will appear on its own pop up.\nWrite each answer on a separate line of a file and then import the file via its path.",
+                                                "Each question of the quiz will appear on its own pop up.\n" +
+                                                "Write each answer on a separate line of a file and then import the file via its path.",
                                                 "Instructions",
                                                 JOptionPane.INFORMATION_MESSAGE);
                                             for (int i = 0; i < allQuestions.size(); i++) {
@@ -1043,7 +1048,8 @@ public class Client {
                                             if (filename == null || filename.trim().isEmpty()
                                                     || fileLength != allQuestions.size()) {
                                                 JOptionPane.showMessageDialog(null,
-                                                    "There was a problem reading the file.\nEither the filepath does not exist or\nthe file is in the wrong format.",
+                                                    "There was a problem reading the file.\n"
+                                                    + "Either the filepath does not exist or\nthe file is in the wrong format.",
                                                     "Error",
                                                     JOptionPane.INFORMATION_MESSAGE);
                                                 writer.write("null");
@@ -1176,7 +1182,8 @@ public class Client {
                                             null, "Which question would you like to view?", "Individual Questions",
                                             JOptionPane.QUESTION_MESSAGE, null, quizQuestions, quizQuestions[0]);
                                         if (questionChoice != null) {
-                                            JOptionPane.showMessageDialog(null, questionChoice, "Individual Questions",
+                                            JOptionPane.showMessageDialog(null, 
+                                                questionChoice, "Individual Questions",
                                                 JOptionPane.INFORMATION_MESSAGE);
                                         }
                                     }
@@ -1213,7 +1220,8 @@ public class Client {
                                             writer.write(newPassword.trim());
                                             writer.println();
                                             writer.flush();
-                                            JOptionPane.showMessageDialog(null, "Password has been changed.", "Success",
+                                            JOptionPane.showMessageDialog(null,
+                                                "Password has been changed.", "Success",
                                                 JOptionPane.INFORMATION_MESSAGE);
                                         }
                                     }
@@ -1233,7 +1241,8 @@ public class Client {
                                     writer.println();
                                     writer.flush();
                                     if (yesNoChoice.equals("Yes")) {
-                                        JOptionPane.showMessageDialog(null, "Account Deleted.\nLogging out.", "Success",
+                                        JOptionPane.showMessageDialog(null, 
+                                            "Account Deleted.\nLogging out.", "Success",
                                             JOptionPane.INFORMATION_MESSAGE);
                                         continueLoop = false;
                                     }

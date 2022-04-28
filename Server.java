@@ -1478,12 +1478,12 @@ public class Server extends Thread {
                                                         String inputFileName;
                                                         if (randomized.equals("Yes")) {
                                                             inputFileName = createQuiz(coursesChoice,
-                                                                    quizTitle + " Random",
-                                                                    question, correctAns, ans2, ans3, ans4);
+                                                                quizTitle + " Random",
+                                                                question, correctAns, ans2, ans3, ans4);
                                                             addQuizToCourse(quizTitle + " Random", coursesChoice);
                                                         } else {
                                                             inputFileName = createQuiz(coursesChoice, quizTitle,
-                                                                    question, correctAns, ans2, ans3, ans4);
+                                                                question, correctAns, ans2, ans3, ans4);
                                                             addQuizToCourse(quizTitle, coursesChoice);
                                                         }
                                                         String keepAdding = reader.readLine();
@@ -1499,11 +1499,11 @@ public class Server extends Thread {
                                                             if (!question.equals("null")) {
                                                                 if (randomized.equals("Yes")) {
                                                                     addQuestion(coursesChoice, quizTitle + " Random",
-                                                                            question,
-                                                                            correctAns, ans2, ans3, ans4);
+                                                                        question,
+                                                                        correctAns, ans2, ans3, ans4);
                                                                 } else if (randomized.equals("No")) {
                                                                     addQuestion(coursesChoice, quizTitle, question,
-                                                                            correctAns, ans2, ans3, ans4);
+                                                                        correctAns, ans2, ans3, ans4);
                                                                 }
                                                                 keepAdding = reader.readLine();
                                                                 if (keepAdding.equals("null")) {
@@ -1566,12 +1566,12 @@ public class Server extends Thread {
                                                     String ans4 = reader.readLine();
                                                     if (!question.equals("null")) {
                                                         addQuestion(courChoice, quizChoice, question, correctAns, ans2,
-                                                                ans3, ans4);
+                                                            ans3, ans4);
                                                     } else {
                                                     }
                                                 } else if (editOption.equals("Delete Question")) {
                                                     String[] questions = getQuizQuestions(
-                                                            courChoice + "@" + quizChoice + ".txt");
+                                                        courChoice + "@" + quizChoice + ".txt");
                                                     String questionsLength = String.valueOf(questions.length);
                                                     writer.write(questionsLength);
                                                     writer.println();
@@ -1587,9 +1587,9 @@ public class Server extends Thread {
                                                     String questionChoice = reader.readLine();
                                                     if (!questionChoice.equals("null")) {
                                                         int questionNum = Integer.parseInt(questionChoice.substring(0,
-                                                                questionChoice.indexOf(".")));
+                                                            questionChoice.indexOf(".")));
                                                         deleteQuestion(courChoice + "@" + quizChoice + ".txt",
-                                                                questionNum);
+                                                            questionNum);
                                                     } else {
                                                         continueLoop = false;
                                                     }
@@ -1823,13 +1823,13 @@ public class Server extends Thread {
                                                         getAttempt(username, courseOption, quizOption) + ".txt");
                                                 if (inProgress.equals("true")) {
                                                     String quizProgressFilename = username + "@" + courseOption +
-                                                            "@" + quizOption + "@" +
-                                                            getAttempt(username, courseOption, quizOption) + ".txt";
+                                                        "@" + quizOption + "@" +
+                                                        getAttempt(username, courseOption, quizOption) + ".txt";
                                                     String quizVersionFilename = username + "@" + courseOption +
-                                                            "@" + quizOption + "@" +
-                                                            getAttempt(username, courseOption, quizOption) + "@Ver.txt";
+                                                        "@" + quizOption + "@" +
+                                                        getAttempt(username, courseOption, quizOption) + "@Ver.txt";
                                                     String[] quizList = getQuizInProgress(quizVersionFilename,
-                                                            quizProgressFilename);
+                                                        quizProgressFilename);
 
                                                     String quizListLength = String.valueOf(quizList.length);
                                                     writer.write(quizListLength);
@@ -1855,7 +1855,7 @@ public class Server extends Thread {
                                                                 correct = false;
                                                             }
                                                             writeToProgressFile(quizProgressFilename, quizName,
-                                                                    questionStatement, correct);
+                                                                questionStatement, correct);
                                                         } else {
                                                             complete = false;
                                                             break;
@@ -1863,20 +1863,20 @@ public class Server extends Thread {
                                                     }
                                                     if (complete) {
                                                         addAttempt(username, courseOption, quizOption,
-                                                                getAttempt(username, courseOption, quizOption));
+                                                            getAttempt(username, courseOption, quizOption));
                                                         timeStampQuiz(quizProgressFilename);
                                                         gradeQuiz(quizProgressFilename);
                                                     }
                                                 } else {
                                                     String quizProgressFilename = username + "@" + courseOption +
-                                                            "@" + quizOption + "@" +
-                                                            getAttempt(username, courseOption, quizOption) + ".txt";
+                                                        "@" + quizOption + "@" +
+                                                        getAttempt(username, courseOption, quizOption) + ".txt";
                                                     String[] quizList = getQuiz(
-                                                            courseOption + "@" + quizOption + ".txt",
-                                                            isRandom(quizOption));
+                                                        courseOption + "@" + quizOption + ".txt",
+                                                        isRandom(quizOption));
                                                     String quizVersionFilename = username + "@" + courseOption +
-                                                            "@" + quizOption + "@" +
-                                                            getAttempt(username, courseOption, quizOption) + "@Ver.txt";
+                                                        "@" + quizOption + "@" +
+                                                        getAttempt(username, courseOption, quizOption) + "@Ver.txt";
                                                     createPersonalQuizVersion(quizList, quizVersionFilename);
                                                     String quizListLength = String.valueOf(quizList.length);
                                                     writer.write(quizListLength);
@@ -1902,7 +1902,7 @@ public class Server extends Thread {
                                                                 correct = false;
                                                             }
                                                             writeToProgressFile(quizProgressFilename, quizName,
-                                                                    questionStatement, correct);
+                                                                questionStatement, correct);
                                                             finished = true;
                                                         } else {
                                                             finished = false;
@@ -1911,7 +1911,7 @@ public class Server extends Thread {
                                                     }
                                                     if (finished) {
                                                         addAttempt(username, courseOption, quizOption,
-                                                                getAttempt(username, courseOption, quizOption));
+                                                            getAttempt(username, courseOption, quizOption));
                                                         timeStampQuiz(quizProgressFilename);
                                                         gradeQuiz(quizProgressFilename);
                                                     }
@@ -1953,7 +1953,7 @@ public class Server extends Thread {
                                             } else if (yN.equals("No")) {
                                             } else {
                                                 String[] quizQuestions = getQuizQuestionsProgressFile(
-                                                        quizAttemptChoice);
+                                                    quizAttemptChoice);
                                                 String quizQuestionsLength = String.valueOf(quizQuestions.length);
                                                 writer.write(quizQuestionsLength);
                                                 writer.println();

@@ -187,7 +187,6 @@ public class Client {
         frame.add(options3);
         frame.add(options4);
         frame.setVisible(true);
-        // SwingUtilities.invokeLater((Runnable) new MyFrame());
     }
 
     public static void main(String[] args)

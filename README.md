@@ -21,6 +21,8 @@ The teacher account can add courses, delete a course, create a quiz, edit a quiz
 The student account can take a quiz, view scores, edit accounts, delete accounts, and log out.
 These drop down menus are considered the main menu, and the student or teacher will be returned to their respective main menu each time they complete their task. Students can take any quiz in any course, however they can only view their own scores.
 
+Additionally we have designed the program in such a manner that if a course, quiz, or account is deleted accidentally, the content may be easily recovered by recreating said course, quiz, or account with the exact same name.
+
 I will now explain the progression of what happens when each task is selected.
 Note: Any time the user clicks the exit button or cancels, client.java will close.
 

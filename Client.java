@@ -10,6 +10,16 @@ import java.awt.event.ActionListener;
 import javax.swing.border.EmptyBorder;
 import java.util.ArrayList;
 
+/**
+ * Client Class.
+ * Purdue University -- CS18000 -- Spring 2022 -- Project
+ * 5
+ *
+ * @author Jaden Gant
+ * @version April 28, 2022
+ * Lab sec 03
+ */
+
 public class Client {
 
     static JTextField tf_question;
@@ -187,6 +197,7 @@ public class Client {
         frame.add(options3);
         frame.add(options4);
         frame.setVisible(true);
+        // SwingUtilities.invokeLater((Runnable) new MyFrame());
     }
 
     public static void main(String[] args)

@@ -6,6 +6,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+/**
+ * Server Class.
+ * Purdue University -- CS18000 -- Spring 2022 -- Project
+ * 5
+ *
+ * @author Jaden Gant
+ * @version April 28, 2022
+ * Lab sec 03
+ */
+
 public class Server extends Thread {
 
     // Reads users file of all usernames and passwords

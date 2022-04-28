@@ -1028,7 +1028,8 @@ public class Client {
                                             }
                                             JOptionPane.showMessageDialog(null,
                                                 "Each question of the quiz will appear on its own pop up.\n" +
-                                                "Write each answer on a separate line of a file and then import the file via its path.",
+                                                "Write each answer on a separate line of a file and then " + 
+                                                "import the file via its path.",
                                                 "Instructions",
                                                 JOptionPane.INFORMATION_MESSAGE);
                                             for (int i = 0; i < allQuestions.size(); i++) {
@@ -1049,7 +1050,8 @@ public class Client {
                                                     || fileLength != allQuestions.size()) {
                                                 JOptionPane.showMessageDialog(null,
                                                     "There was a problem reading the file.\n"
-                                                    + "Either the filepath does not exist or\nthe file is in the wrong format.",
+                                                    + "Either the filepath does not exist or\n"
+                                                    + "the file is in the wrong format.",
                                                     "Error",
                                                     JOptionPane.INFORMATION_MESSAGE);
                                                 writer.write("null");

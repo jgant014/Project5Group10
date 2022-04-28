@@ -1,6 +1,7 @@
 # Project5Group10
 
 Jaden Gant - Submitted Report on Brightspace. Jaden Gant - Submitted Vocareum workspace.
+Trysta Gustafson
 
 Note: When using any text fields, never use the word "Random", "null", or the symbol "@".
 Also, any time client.java closes or ends, server.java will continue running.
@@ -71,4 +72,14 @@ Grading - teachers can view all students’ quiz scores, the time each student s
 
 Testing:
 
-Creating an account, logging out, then logging back in - user chooses student, user chooses login, user enters Jaden, user enters Gant, error message saying account doesn’t exist, user reopens client.java, user chooses student, user chooses create an account, user enters Jaden, user enters Gant, success message saying account created, user is brought to main menu, user chooses log out, client.java ends, user reopens client.java, user chooses student, user chooses login, user enters Jaden, user enters Gant, user is brought to main menu.
+Note: a teacher and a student may have the same username, but no two students may have the same username and no two teachers may have the same username
+
+Creating an account, logging out, then logging back in - user chooses student, user chooses login, user enters Jaden, user enters Gant, error message saying account doesn’t exist, user reopens client.java, user chooses student, user chooses create an account, user enters Jaden, user enters Gant, success message saying account created, user is brought to main menu, user chooses log out, client.java ends, user reopens client.java, user chooses student, user chooses login, user enters Jaden, user enters Gant, user is brought to main menu
+
+Creating a quiz - user chooses teacher, user chooses login, user enters Jaden, user enters Gant, user is brought to main menu after a success message, user chooses create quiz, user gets error message saying no courses are created yet, user returned to main menu, user enters create course, user creates course titled Math, success message, user returned to main menu, user enters create quiz, user enters Math course, user enters quiz title: Polygons, user enters question: Which is a quadrilateral? and corresponding answer choices, user chooses no on making quiz questions randomized, user is prompted with success on creating quiz message, user selects yes to add another question, user enters question: Which is 3D? And corresponding answer choices, user selects no to add another question and is brought back to the main menu, user logs out
+
+Taking a quiz - user selects student, user selects login, user enters Jaden, user enters Gant, user selects take quiz, user enters math course, user enters Polygons quiz, user enters they would like to take the quiz manually, user enters answer to first question, user enters answer to second question, user prompted with successfully completing the quiz, user returned to main menu, user logs out
+
+Viewing Scores as a Student - user selects student, user selects login, user enters Jaden, user enters Gant, user selects view scores, user selects Jaden@Math@Polygons@1.txt, user prompted with “Score: 2/2” and the time the quiz was submitted, user clicks ok, user chooses they would like to view individual questions, user prompted with drop down menu of the question numbers, their question statements, and their correctness. In this case, the user got both questions correct, which matches their score of 2/2. User selects question 1, user is prompted with a pop up of question 1, user clicks ok, user is returned to main menu, user logs out
+
+Viewing Scores as a Teacher - user selects teacher, user selects login, user enters Jaden, user enters Gant, user selects view scores, user selects student to view: user selects Jaden, user selects Jaden@Math@Polygons@1.txt, user prompted with “Score: 2/2” and the time the quiz was submitted, user clicks ok, user chooses they would like to view individual questions, user prompted with drop down menu of the question numbers, their question statements, and their correctness. In this case, the user got both questions correct, which matches their score of 2/2. User selects question 1, user is prompted with a pop up of question 1, user clicks ok, user is returned to main menu, user logs out
